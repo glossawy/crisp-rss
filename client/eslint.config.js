@@ -62,6 +62,7 @@ export default tsEslint.config({
         pathGroups: [
           { pattern: '@testing-library/**/*', group: 'external' },
           { pattern: '@tanstack/**/*', group: 'external' },
+          { pattern: '@radix-ui/**/*', group: 'external' },
           { pattern: '@/**/*', group: 'internal' },
           { pattern: 'bun:*', group: 'builtin' },
         ],

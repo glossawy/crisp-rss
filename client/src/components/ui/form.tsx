@@ -171,7 +171,6 @@ const FormMessage = React.forwardRef<
 FormMessage.displayName = 'FormMessage'
 
 export {
-  useFormField, // eslint-disable-line
   Form,
   FormItem,
   FormLabel,

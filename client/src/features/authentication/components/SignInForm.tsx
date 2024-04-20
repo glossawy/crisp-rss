@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useCallback } from 'react'
+import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons'
+import { useCallback, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -22,6 +23,8 @@ const SignInSchema = z.object({
 type SignInData = z.infer<typeof SignInSchema>
 
 export default function SignInForm() {
+  const [showPassword, setShowPassword] = useState(false)
+
   const form = useForm<SignInData>({
     resolver: zodResolver(SignInSchema),
     defaultValues: {
@@ -55,9 +58,21 @@ export default function SignInForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel className="flex flex-row">
+                <span className="place-content-center">Password</span>
+                <Button
+                  type="button"
+                  variant="icon"
+                  size="icon"
+                  className="ml-2 h-5 w-5"
+                  onClick={() => setShowPassword(!showPassword)}
+                  title={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOpenIcon /> : <EyeClosedIcon />}
+                </Button>
+              </FormLabel>
               <FormControl>
-                <Input type="password" {...field} />
+                <Input type={showPassword ? 'text' : 'password'} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
