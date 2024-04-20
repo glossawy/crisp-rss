@@ -153,6 +153,7 @@
         <option value="controller" />
         <option value="generator" />
         <option value="integration_test" />
+        <option value="jbuilder" />
         <option value="job" />
         <option value="mailbox" />
         <option value="mailer" />
@@ -206,6 +207,7 @@
         <option value="controller" />
         <option value="generator" />
         <option value="integration_test" />
+        <option value="jbuilder" />
         <option value="job" />
         <option value="mailbox" />
         <option value="mailer" />
@@ -511,15 +513,6 @@
           <RakeTaskImpl id="log">
             <subtasks>
               <RakeTaskImpl description="Truncate all/specified *.log files in log/ to zero bytes (specify which logs with LOGS=test,development)" fullCommand="log:clear" id="clear" />
-            </subtasks>
-          </RakeTaskImpl>
-          <RakeTaskImpl description="Run all specs in spec directory (excluding plugin specs)" fullCommand="spec" id="spec" />
-          <RakeTaskImpl id="spec">
-            <subtasks>
-              <RakeTaskImpl description="Run the code examples in spec/lib" fullCommand="spec:lib" id="lib" />
-              <RakeTaskImpl description="Run the code examples in spec/models" fullCommand="spec:models" id="models" />
-              <RakeTaskImpl description="" fullCommand="spec:prepare" id="prepare" />
-              <RakeTaskImpl description="" fullCommand="spec:statsetup" id="statsetup" />
             </subtasks>
           </RakeTaskImpl>
           <RakeTaskImpl description="Report code statistics (KLOCs, etc) from the application or engine" fullCommand="stats" id="stats" />

@@ -21,7 +21,7 @@ gem 'tzinfo-data', platforms: %i[windows jruby]
 gem 'bootsnap', require: false
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
-# gem "rack-cors"
+gem "rack-cors"
 
 gem "acts_as_paranoid", "~> 0.9.0"
 gem "argon2", "~> 2.3"

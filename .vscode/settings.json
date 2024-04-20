@@ -1,0 +1,17 @@
+{
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
+  "eslint.experimental.useFlatConfig": true,
+  "eslint.lintTask.options": "--config ./client/eslint.config.js .",
+  "eslint.options": {
+    "cwd": "${workspaceRoot}/client"
+  },
+  "eslint.useESLintClass": true,
+  "eslint.workingDirectories": [
+    "./client"
+  ],
+}
