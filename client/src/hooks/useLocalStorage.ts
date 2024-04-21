@@ -1,55 +1,51 @@
 import { useCallback, useSyncExternalStore } from 'react'
-import { Primitive } from 'zod'
 
-import { StorageKeys } from '@/lib/storageKeys'
+import {
+  StorableMap,
+  StoreUpdateEvent,
+  clearStoredData,
+  storeData,
+} from '@/lib/storage'
 
-declare global {
-  interface WindowEventMap {
-    'crisprss:storage-event': StorageEvent
-  }
-}
-
-type Serializable = Serializable[] | { [key: string]: Serializable } | Primitive
-type StorageKey = (typeof StorageKeys)[keyof typeof StorageKeys]
-
-type StorageEventPayload = { key: StorageKey }
-
-class StorageEvent extends CustomEvent<StorageEventPayload> {
-  static type = 'crisprss:storage-event' as const
-
-  constructor(key: StorageKey) {
-    super(StorageEvent.type, { detail: { key } })
-  }
-}
-
-export default function useLocalStorage<T extends Serializable>(
-  key: StorageKey,
-  initialValue: T,
-): [T, (newValue: T) => void] {
+export default function useLocalStorage<K extends keyof StorableMap>(
+  key: K,
+  initialValue: StorableMap[K] | null,
+) {
   const storedValue = useSyncExternalStore(
     (callback) => {
-      const listener = (evt: StorageEvent) => {
+      const listener = (evt: StoreUpdateEvent) => {
         if (evt.detail.key === key) callback()
       }
 
-      window.addEventListener(StorageEvent.type, listener)
+      const storageListener = (evt: StorageEvent) => {
+        if (evt.key === key) callback()
+      }
+
+      window.addEventListener('crisprss:storage-update', listener)
+      window.addEventListener('storage', storageListener)
       return () => {
-        window.removeEventListener(StorageEvent.type, listener)
+        window.removeEventListener('crisprss:storage-update', listener)
+        window.removeEventListener('storage', storageListener)
       }
     },
     () => localStorage.getItem(key),
   )
 
   const setStoredValue = useCallback(
-    (newValue: T) => {
-      localStorage.setItem(key, JSON.stringify(newValue))
-      window.dispatchEvent(new StorageEvent(key))
+    (newValue: StorableMap[K]) => {
+      storeData(key, newValue)
     },
     [key],
   )
 
-  const value =
-    storedValue == null ? initialValue : (JSON.parse(storedValue) as T)
+  const clearStoredValue = useCallback(() => {
+    clearStoredData(key)
+  }, [key])
 
-  return [value, setStoredValue]
+  const value =
+    storedValue == null
+      ? initialValue
+      : (JSON.parse(storedValue) as StorableMap[K])
+
+  return { value, setStoredValue, clearStoredValue }
 }

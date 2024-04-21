@@ -19,8 +19,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { sessionsClient } from '@/features/authentication/api'
-import useSession from '@/features/authentication/hooks/useSession'
+import { authenticate } from '@/features/authentication/lib/auth'
 
 const SignInSchema = z.object({
   email: z.string().email({ message: 'Not a valid email address' }),
@@ -30,7 +29,6 @@ const SignInSchema = z.object({
 type SignInData = z.infer<typeof SignInSchema>
 
 export default function SignInForm() {
-  const { setSession } = useSession()
   const [showPassword, setShowPassword] = useState(false)
 
   const form = useForm<SignInData>({
@@ -41,22 +39,9 @@ export default function SignInForm() {
   })
 
   const onSubmit = async (credentials: SignInData) => {
-    const response = await sessionsClient.createSession.mutation({
-      body: { user: { ...credentials } },
-    })
+    const authenticated = await authenticate(credentials)
 
-    if (response.status === 201) {
-      const token = response.headers.get('Access-Token')
-      const expiry = response.headers.get('Expire-At')
-
-      console.debug(Object.fromEntries(response.headers.entries()))
-      if (token == null || expiry == null)
-        throw new Error(
-          'Successful authentication response but missing Access-Token or Expire-At headers',
-        )
-
-      setSession({ jwt: token, expires_at: expiry })
-    } else {
+    if (!authenticated) {
       form.setError('root', { message: 'Email or password was incorrect' })
     }
   }

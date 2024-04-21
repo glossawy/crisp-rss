@@ -7,6 +7,13 @@ import { MessageResponse } from '@/services/types'
 
 const c = initContract()
 
+export const CreateSessionRequest = z.object({
+  user: z.object({
+    email: z.string().email(),
+    password: z.string(),
+  }),
+})
+
 export const contract = c.router({
   createSession: {
     method: 'POST',
@@ -16,12 +23,7 @@ export const contract = c.router({
       201: c.type<MessageResponse>(),
       400: c.noBody(),
     },
-    body: z.object({
-      user: z.object({
-        email: z.string().email(),
-        password: z.string(),
-      }),
-    }),
+    body: CreateSessionRequest,
   },
   checkSession: {
     method: 'GET',

@@ -13,7 +13,7 @@ class ApplicationController < ActionController::API
 
   def jwt
     @jwt ||=
-      if bearer_token
+      if bearer_token.present?
         Sessions::Jwt::Encoded.new(bearer_token).decode
       else
         Sessions::Jwt.new

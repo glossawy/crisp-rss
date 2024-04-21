@@ -16,7 +16,6 @@ module SessionAuthentication
   end
 
   def skip_authentication?
-    Rails.logger.info([skip_authentication_actions, action_name])
     skip_authentication_actions.include?(:all) ||
       skip_authentication_actions.include?(action_name.to_sym)
   end

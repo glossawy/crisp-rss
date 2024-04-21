@@ -1,3 +1,4 @@
+import { useRouterState } from '@tanstack/react-router'
 import { differenceInMilliseconds, parseISO } from 'date-fns'
 import { useEffect } from 'react'
 
@@ -8,9 +9,10 @@ const HEARTBEAT_INTERVAL = import.meta.env.DEV ? 5 * 1000 : 60 * 1000
 
 export default function SessionHeartbeat() {
   const { session, authHeader, setSession, clearSession } = useSession()
+  const { location } = useRouterState()
 
   useEffect(() => {
-    if (session?.expires_at == null) return
+    if (location.pathname in ['', '/']) return
 
     const checkSession = async () => {
       const response = await sessionsClient.checkSession.query({
@@ -27,7 +29,8 @@ export default function SessionHeartbeat() {
         // Sign-out early if session expires soon or has expired
         if (differenceInMilliseconds(expiry, new Date()) < HEARTBEAT_INTERVAL)
           clearSession()
-        else setSession({ ...session, expires_at: expiry.toISOString() })
+        else if (session)
+          setSession({ ...session, expires_at: expiry.toISOString() })
       }
     }
 
@@ -35,7 +38,7 @@ export default function SessionHeartbeat() {
     return () => {
       clearInterval(interval)
     }
-  }, [session?.expires_at, clearSession])
+  }, [location.pathname, session?.expires_at, clearSession])
 
   return null
 }

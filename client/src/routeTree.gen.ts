@@ -13,34 +13,34 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as IndexImport } from './routes/index'
 
 // Create Virtual Routes
 
-const HomeLazyImport = createFileRoute('/home')()
-const IndexLazyImport = createFileRoute('/')()
+const HomeIndexLazyImport = createFileRoute('/home/')()
 
 // Create/Update Routes
 
-const HomeLazyRoute = HomeLazyImport.update({
-  path: '/home',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/home.lazy').then((d) => d.Route))
-
-const IndexLazyRoute = IndexLazyImport.update({
+const IndexRoute = IndexImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+} as any)
+
+const HomeIndexLazyRoute = HomeIndexLazyImport.update({
+  path: '/home/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/home/index.lazy').then((d) => d.Route))
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/': {
-      preLoaderRoute: typeof IndexLazyImport
+      preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/home': {
-      preLoaderRoute: typeof HomeLazyImport
+    '/home/': {
+      preLoaderRoute: typeof HomeIndexLazyImport
       parentRoute: typeof rootRoute
     }
   }
@@ -48,6 +48,6 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren([IndexLazyRoute, HomeLazyRoute])
+export const routeTree = rootRoute.addChildren([IndexRoute, HomeIndexLazyRoute])
 
 /* prettier-ignore-end */
