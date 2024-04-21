@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: feed_fetch_attempts
@@ -19,10 +21,10 @@
 class FeedFetchAttempt < ApplicationRecord
   belongs_to :feed
 
-  has_many :outcomes, class_name: "FeedFetchAttemptOutcome", dependent: :destroy
+  has_many :outcomes, class_name: 'FeedFetchAttemptOutcome', dependent: :destroy
 
   validates :perform_at, presence: true, comparison: {
     greater_than_or_equal_to: -> { Time.current },
-    message: "must be in the future"
+    message: 'must be in the future'
   }
 end

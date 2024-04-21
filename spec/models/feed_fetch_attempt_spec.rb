@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: feed_fetch_attempts
@@ -16,37 +18,39 @@
 #
 #  feed_id  (feed_id => feeds.id)
 #
-require "rails_helper"
+require 'rails_helper'
 
-RSpec.describe FeedFetchAttempt, type: :model do
-  subject(:attempt) { create :feed_fetch_attempt }
+RSpec.describe FeedFetchAttempt do
+  subject(:attempt) { create(:feed_fetch_attempt) }
 
-  describe "validations" do
-    subject(:attempt) { build_stubbed :feed_fetch_attempt, **params }
+  describe 'validations' do
+    subject(:attempt) { build_stubbed(:feed_fetch_attempt, **params) }
+
     let(:params) { {} }
 
-    it "is valid" do
+    it 'is valid' do
       expect(attempt).to be_valid
     end
 
-    context "when perform at is now" do
-      let(:params) { {perform_at: Time.current} }
+    context 'when perform at is now' do
+      let(:params) { { perform_at: Time.current } }
+
       around { |ex| Timecop.freeze(&ex) }
 
-      it "is valid" do
+      it 'is valid' do
         expect(attempt).to be_valid
       end
     end
 
     [
-      ["perform at is missing", {perform_at: nil}, /blank/],
-      ["perform at is in the past", {perform_at: 1.hour.ago}, /future/]
+      ['perform at is missing', { perform_at: nil }, /blank/],
+      ['perform at is in the past', { perform_at: 1.hour.ago }, /future/],
     ].each do |(description, params, message_matcher)|
       context "when #{description}" do
         let(:params) { params }
 
-        it "fails validation" do
-          expect { subject.validate! }.to raise_error(ActiveRecord::RecordInvalid, message_matcher)
+        it 'fails validation' do
+          expect { attempt.validate! }.to raise_error(ActiveRecord::RecordInvalid, message_matcher)
         end
       end
     end

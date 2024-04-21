@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Sessions
   class Manager
     attr_reader :user
@@ -24,7 +26,7 @@ module Sessions
     end
 
     def revoke_session!(session_token)
-      session = sessions.with_deleted.find_by!(session_token:)
+      session = sessions.find_by!(session_token:)
 
       session.expire! if session.active?
     end

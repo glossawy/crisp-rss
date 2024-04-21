@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: users
@@ -16,68 +18,69 @@
 #  index_users_on_email          (email) UNIQUE
 #  index_users_on_password_hash  (password_hash)
 #
-require "rails_helper"
+require 'rails_helper'
 
-RSpec.describe User, type: :model do
-  let_it_be(:user) { create :user }
-  subject { user }
+RSpec.describe User do
+  subject(:user) { create(:user) }
 
-  describe ".fetch_by_token" do
-    subject { described_class.fetch_by_token(session_token) }
+  describe '.fetch_by_token' do
+    subject(:fetched_user) { described_class.fetch_by_token(session_token) }
 
-    context "when no matching session exists" do
-      let(:session_token) { "test" }
+    context 'when no matching session exists' do
+      let(:session_token) { 'test' }
 
-      it "returns nil" do
-        expect(subject).to be_nil
+      it 'returns nil' do
+        expect(fetched_user).to be_nil
       end
     end
 
-    context "when a matching sessions exists" do
-      let_it_be(:session) { create :user_session, user: }
+    context 'when a matching sessions exists' do
+      let(:session) { create(:user_session, user:) }
       let(:session_token) { session.session_token }
 
-      it "returns the user" do
-        expect(subject).to eq user
+      it 'returns the user' do
+        expect(fetched_user).to eq user
       end
 
-      context "when the session is expired" do
+      context 'when the session is expired' do
         before { session.expire! }
 
-        it "returns nil" do
-          expect(subject).to be_nil
+        it 'returns nil' do
+          expect(fetched_user).to be_nil
         end
       end
     end
   end
 
-  describe "validations" do
-    subject(:user) { build :user, **params }
+  describe 'validations' do
+    subject(:user) { build(:user, **params) }
+
     let(:params) { {} }
 
-    it "is valid" do
+    it 'is valid' do
       expect(user).to be_valid
     end
 
     [
-      ["email is missing", {email: nil}, /blank/],
-      ["email is blank", {email: ""}, /blank/],
+      ['email is missing', { email: nil }, /blank/],
+      ['email is blank', { email: '' }, /blank/],
       # Additional validation for emails below
 
-      ["display name is missing", {display_name: nil}, /blank/],
-      ["display name is blank", {display_name: ""}, /blank/],
-      ["display name is too short", {display_name: "a"}, /between 2 and 255/],
-      ["display name is too long", {display_name: "a" * 256}, /between 2 and 255/],
-      ["display name has spaces", {display_name: "this is a name"}, /whitespace/],
+      ['display name is missing', { display_name: nil }, /blank/],
+      ['display name is blank', { display_name: '' }, /blank/],
+      ['display name is too short', { display_name: 'a' }, /between 2 and 255/],
+      ['display name is too long', { display_name: 'a' * 256 }, /between 2 and 255/],
+      ['display name has spaces', { display_name: 'this is a name' }, /whitespace/],
 
-      ["password is missing", {password: nil}, /blank/],
-      ["password is blank", {password: ""}, /blank/],
-      ["password is too short", {password: "a"}, /minimum is 8/],
-      ["password is too long", {password: "a" * 5000}, /too long/]
+      ['password is missing', { password: nil }, /blank/],
+      ['password is blank', { password: '' }, /blank/],
+      ['password is too short', { password: 'a' }, /minimum is 8/],
+      ['password is too long', { password: 'a' * 5000 }, /too long/],
     ].each do |(description, params, message_matcher)|
       context "when #{description}" do
         let(:params) { params }
-        it "fails validation" do
+
+        it 'fails validation' do
           expect { user.validate! }.to raise_error(ActiveRecord::RecordInvalid, message_matcher)
         end
       end
@@ -119,9 +122,9 @@ RSpec.describe User, type: :model do
 
     valid_emails.each do |email|
       context "when email is #{email}" do
-        let(:params) { {email:} }
+        let(:params) { { email: } }
 
-        it "is valid" do
+        it 'is valid' do
           expect(user).to be_valid
         end
       end
@@ -129,9 +132,9 @@ RSpec.describe User, type: :model do
 
     invalid_emails.each do |email|
       context "when email is #{email}" do
-        let(:params) { {email:} }
+        let(:params) { { email: } }
 
-        it "fails validation" do
+        it 'fails validation' do
           expect { user.validate! }.to raise_error(ActiveRecord::RecordInvalid)
         end
       end

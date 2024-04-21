@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: feed_fetch_attempt_outcomes
 #
 #  id                    :integer          not null, primary key
-#  is_success            :boolean
 #  reason                :string
+#  state                 :string
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  feed_fetch_attempt_id :integer          not null
@@ -17,57 +19,60 @@
 #
 #  feed_fetch_attempt_id  (feed_fetch_attempt_id => feed_fetch_attempts.id)
 #
-require "rails_helper"
+require 'rails_helper'
 
-RSpec.describe FeedFetchAttemptOutcome, type: :model do
-  subject(:outcome) { create :feed_fetch_attempt_outcome, **params }
+RSpec.describe FeedFetchAttemptOutcome do
+  subject(:outcome) { create(:feed_fetch_attempt_outcome, **params) }
+
   let(:params) { {} }
 
-  context "when success flag not set" do
-    it "is pending" do
-      expect(outcome).to be_pending
-    end
+  context 'when state is set' do
+    let(:params) { { state: } }
 
-    it "is not a success" do
-      expect(outcome).not_to be_success
-    end
+    context 'when pending' do
+      let(:state) { 'pending' }
 
-    it "is not a failure" do
-      expect(outcome).not_to be_failure
-    end
-  end
-
-  context "when success flag is set" do
-    let(:params) { {is_success:} }
-
-    context "when flag is true" do
-      let(:is_success) { true }
-
-      it "is not pending" do
-        expect(outcome).not_to be_pending
+      it 'is pending' do
+        expect(outcome).to be_pending
       end
 
-      it "is a success" do
-        expect(outcome).to be_success
+      it 'is not a success' do
+        expect(outcome).not_to be_success
       end
 
-      it "is not a failure" do
+      it 'is not a failure' do
         expect(outcome).not_to be_failure
       end
     end
 
-    context "when flag is false" do
-      let(:is_success) { false }
+    context 'when success' do
+      let(:state) { 'success' }
 
-      it "is not pending" do
+      it 'is not pending' do
         expect(outcome).not_to be_pending
       end
 
-      it "is not a success" do
+      it 'is a success' do
+        expect(outcome).to be_success
+      end
+
+      it 'is not a failure' do
+        expect(outcome).not_to be_failure
+      end
+    end
+
+    context 'when failure' do
+      let(:state) { 'failure' }
+
+      it 'is not pending' do
+        expect(outcome).not_to be_pending
+      end
+
+      it 'is not a success' do
         expect(outcome).not_to be_success
       end
 
-      it "is a failure" do
+      it 'is a failure' do
         expect(outcome).to be_failure
       end
     end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: feeds
@@ -20,8 +22,8 @@
 class Feed < ApplicationRecord
   belongs_to :user
 
-  has_many :attempts, class_name: "FeedFetchAttempt", dependent: :destroy
+  has_many :attempts, class_name: 'FeedFetchAttempt', dependent: :destroy
 
-  validates :url, presence: true, url: {no_local: true}
-  validates :interval, presence: true, numericality: {only_integer: true, greater_than: 0}
+  validates :url, presence: true, url: { no_local: true }
+  validates :interval, presence: true, numericality: { only_integer: true, greater_than: 0 }
 end

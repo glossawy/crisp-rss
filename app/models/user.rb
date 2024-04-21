@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: users
@@ -26,15 +28,15 @@ class User < ApplicationRecord
   validates :display_name, presence: true, length: {
     minimum: 2,
     maximum: 255,
-    message: "must be at between 2 and 255 characters long"
+    message: 'must be at between 2 and 255 characters long'
   }, format: {
     with: /\A\S+\z/i,
-    message: "cannot contain any whitespace"
+    message: 'cannot contain any whitespace'
   }
-  validates :password, length: {minimum: 8}
+  validates :password, length: { minimum: 8 }
 
   has_many :feeds, dependent: nil
-  has_many :sessions, class_name: "UserSession", dependent: :destroy
+  has_many :sessions, class_name: 'UserSession', dependent: :destroy
 
   def self.fetch_by_token(session_token)
     session = UserSession.active.find_by(session_token:)

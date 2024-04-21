@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec::Matchers.define :match_password do |plaintext|
   match do |hashed|
     Argon2::Password.verify_password(

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Sessions
   class Token
     attr_reader :value
@@ -16,8 +18,6 @@ module Sessions
     def initialize(value = generate_token_value)
       @value = value
     end
-
-    private
 
     delegate :generate_token_value, to: :class
   end

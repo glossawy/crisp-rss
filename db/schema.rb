@@ -13,7 +13,7 @@
 ActiveRecord::Schema[7.1].define(version: 2024_04_19_181509) do
   create_table "feed_fetch_attempt_outcomes", force: :cascade do |t|
     t.integer "feed_fetch_attempt_id", null: false
-    t.boolean "is_success"
+    t.string "state"
     t.string "reason"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -40,7 +40,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_19_181509) do
   create_table "user_sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "session_token", null: false
-    t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "expires_at", null: false

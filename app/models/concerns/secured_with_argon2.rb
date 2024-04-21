@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # A very nearly identical copy of ActiveModel::SecurePassword
 # but with Argon2 instead of BCrypt as well as some application
 # specific configuration
@@ -7,13 +9,13 @@ module SecuredWithArgon2
   ARGON2_MAX_INPUT_BYTES = 127
 
   def argon2_secret
-    Rails.env["CRISP_RSS_SECRET_KEY"].presence
+    Rails.env['CRISP_RSS_SECRET_KEY'].presence
   end
 
   def argon2_profile
     if Rails.env.test?
       :unsafe_cheapest
-    elsif Rails.env["CRISP_RSS_HIGH_MEMORY"] == "1"
+    elsif Rails.env['CRISP_RSS_HIGH_MEMORY'] == '1'
       :rfc_9106_high_memory
     else
       :rfc_9106_low_memory
@@ -21,6 +23,7 @@ module SecuredWithArgon2
   end
 
   class_methods do
+    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     def secured_with_argon2!(password_attr = :password)
       attr_reader password_attr
       attr_accessor :"#{password_attr}_confirmation", :"#{password_attr}_challenge"
@@ -32,9 +35,9 @@ module SecuredWithArgon2
         else
           instance_variable_set(:"@#{password_attr}", plaintext)
           hashed = Argon2::Password.create(plaintext, {
-            profile: argon2_profile,
-            secret: argon2_secret
-          })
+                                             profile: argon2_profile,
+                                             secret: argon2_secret
+                                           })
           public_send(:"#{password_attr}_hash=", hashed)
         end
       end
@@ -55,11 +58,13 @@ module SecuredWithArgon2
       validate do |record|
         challenge = record.public_send(:"#{password_attr}_challenge")
         if challenge
-          hash_was = record.public_send(:"#{password_attr}_hash_was") if record.respond_to?(:"#{password_attr}_hash_was")
+          if record.respond_to?(:"#{password_attr}_hash_was")
+            hash_was = record.public_send(:"#{password_attr}_hash_was")
+          end
           if hash_was.blank? ||
-              !Argon2::Password.verify_password(
-                challenge, hash_was, argon2_secret
-              )
+             !Argon2::Password.verify_password(
+               challenge, hash_was, argon2_secret
+             )
             record.errors.add(:"#{password_attr}_challenge")
           end
         end
@@ -73,7 +78,8 @@ module SecuredWithArgon2
         end
       end
 
-      validates password_attr, confirmation: {allow_blank: true}
+      validates password_attr, confirmation: { allow_blank: true }
     end
+    # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
   end
 end

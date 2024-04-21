@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateFeedFetchAttempts < ActiveRecord::Migration[7.1]
   def change
     create_table :feed_fetch_attempts do |t|
