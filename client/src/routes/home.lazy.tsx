@@ -1,5 +1,6 @@
-import useSession from '@/features/authentication/hooks/useSession'
 import { createLazyFileRoute, useNavigate } from '@tanstack/react-router'
+
+import useSession from '@/features/authentication/hooks/useSession'
 
 export const Route = createLazyFileRoute('/home')({
   component: () => {

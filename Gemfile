@@ -27,7 +27,6 @@ gem 'rack-cors'
 
 gem 'acts_as_paranoid', '~> 0.9.0'
 gem 'argon2', '~> 2.3'
-gem 'ed25519', '~> 1.3'
 gem 'feedjira', '~> 3.2'
 gem 'interactor', '~> 3.1'
 gem 'jwt', '~> 2.8'

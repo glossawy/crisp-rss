@@ -15,6 +15,18 @@ RSpec.describe 'Sessions' do
       end
     end
 
+    context 'when sessions is expired' do
+      let(:user_session) { create(:user_session, :expired) }
+
+      before { login!(user_session) }
+
+      it 'returns a 400' do
+        json_get sessions_check_path
+
+        expect(response).to have_http_status :bad_request
+      end
+    end
+
     context 'when authenticated' do
       let(:user_session) { create(:user_session) }
 
