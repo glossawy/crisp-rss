@@ -5,17 +5,18 @@ require 'rails_helper'
 RSpec.describe 'Sessions' do
   include AuthHelper
 
+  let(:response_hash) { JSON.parse(response.body, symbolize_names: true) }
+
   describe 'GET /sessions/check' do
     context 'when not authenticated' do
-      it 'returns a 404' do
+      it 'returns a 400' do
         json_get sessions_check_path
-        expect(response).to have_http_status :not_found
+        expect(response).to have_http_status :bad_request
       end
     end
 
     context 'when authenticated' do
       let(:user_session) { create(:user_session) }
-      let(:response_hash) { JSON.parse(response.body, symbolize_names: true) }
 
       before { login!(user_session) }
 
@@ -42,15 +43,22 @@ RSpec.describe 'Sessions' do
       expect(response).to have_http_status :bad_request
     end
 
-    it 'returns a 201 when credentials match' do
-      json_post sessions_path, params: {
-        user: {
-          email: user.email,
-          password: user.password,
-        },
-      }
+    context 'when credentials match' do
+      let(:params) { { user: { email: user.email, password: user.password } } }
 
-      expect(response).to have_http_status :created
+      it 'returns a 201 response' do
+        json_post(sessions_path, params:)
+
+        expect(response).to have_http_status(:created)
+      end
+
+      it 'returns session info' do
+        json_post(sessions_path, params:)
+
+        session = user.sessions.last
+
+        expect(response_hash).to match(hash_including(active: true, expires_at: session.expires_at.iso8601))
+      end
     end
   end
 end

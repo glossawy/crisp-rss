@@ -4,12 +4,14 @@ class SessionsController < AuthenticatedController
   skip_authentication!
 
   def check
-    session = CurrentSession.session
+    user_session = CurrentSession.session
+    session.send :load!
+    Rails.logger.info([user_session, session.to_h])
 
-    if session.blank?
-      head :not_found
+    if user_session.blank?
+      head :bad_request
     else
-      render locals: { session: CurrentSession.session }
+      render locals: { session: user_session }
     end
   end
 
@@ -19,7 +21,7 @@ class SessionsController < AuthenticatedController
     if result.success?
       reset_session
       session[:auth_token] = result.token
-      head :created
+      render 'sessions/check', status: :created, locals: { session: result.session }
     else
       head :bad_request
     end

@@ -11,6 +11,7 @@ class SignInUser
     token = Sessions::Manager.new(user).create_new_session!
 
     context.user = user
+    context.session = user.sessions.find_by!(session_token: token)
     context.token = token
   end
 
