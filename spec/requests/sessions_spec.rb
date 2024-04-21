@@ -25,11 +25,11 @@ RSpec.describe 'Sessions' do
         expect(response).to have_http_status :ok
       end
 
-      it 'returns the active state and expiry' do
+      it 'returns the expiry' do
         json_get sessions_check_path
 
         expect(response_hash)
-          .to match(hash_including(active: true, expires_at: user_session.expires_at.iso8601))
+          .to eq(expires_at: user_session.expires_at.iso8601)
       end
     end
   end
@@ -50,14 +50,6 @@ RSpec.describe 'Sessions' do
         json_post(sessions_path, params:)
 
         expect(response).to have_http_status(:created)
-      end
-
-      it 'returns session info' do
-        json_post(sessions_path, params:)
-
-        session = user.sessions.last
-
-        expect(response_hash).to match(hash_including(active: true, expires_at: session.expires_at.iso8601))
       end
     end
   end

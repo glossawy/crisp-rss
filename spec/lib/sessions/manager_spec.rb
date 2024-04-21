@@ -10,19 +10,19 @@ RSpec.describe Sessions::Manager do
 
   describe '#create_new_session!' do
     it 'returns a session token' do
-      expect(manager.create_new_session!).to be_a String
+      expect(manager.create_new_session!).to be_a described_class::SessionInfo
     end
 
     it 'creates a new session associated with the user' do
-      session_token = manager.create_new_session!
+      session_token = manager.create_new_session!.token
       expect(user.sessions.where(session_token:)).to exist
     end
 
     it 'creates unique session tokens' do
-      st1 = manager.create_new_session!
-      st2 = manager.create_new_session!
+      si1 = manager.create_new_session!
+      si2 = manager.create_new_session!
 
-      expect(st1).not_to eq st2
+      expect(si1).not_to eq si2
     end
   end
 

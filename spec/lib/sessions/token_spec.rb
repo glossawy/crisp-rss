@@ -3,21 +3,11 @@
 require 'sessions/token'
 
 RSpec.describe Sessions::Token do
-  context 'without an initialization value' do
-    subject(:token) { described_class.new }
+  describe '.generate_token_value' do
+    subject(:token) { described_class.generate_token_value }
 
-    it 'generates a token value' do
-      expect(token.value).to match(/[a-f0-9]+/i)
-    end
-  end
-
-  context 'with an initialization value' do
-    subject(:token) { described_class.new(value) }
-
-    let(:value) { 'token' }
-
-    it 'uses initialization value as token value' do
-      expect(token.value).to eq value
+    it 'returns a token of the right length' do
+      expect(token.length).to eq described_class::BASE36_LEN
     end
   end
 end

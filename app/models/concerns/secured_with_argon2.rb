@@ -9,11 +9,13 @@ module SecuredWithArgon2
   ARGON2_MAX_INPUT_BYTES = 127
   ARGON2_KEYGEN = [ENV.fetch('CRISPRSS_ARGON2_SALT'), 512].freeze
 
-  def argon2_secret
+  def self.argon2_secret
     Rails.application.key_generator.generate_key(*ARGON2_KEYGEN)
   end
 
-  def argon2_profile
+  def argon2_secret = SecuredWithArgon2.argon2_secret
+
+  def self.argon2_profile
     if Rails.env.test?
       :unsafe_cheapest
     elsif Rails.env['CRISP_RSS_HIGH_MEMORY'] == '1'
@@ -22,6 +24,8 @@ module SecuredWithArgon2
       :rfc_9106_low_memory
     end
   end
+
+  def argon2_profile = SecuredWithArgon2.argon2_profile
 
   class_methods do
     # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity

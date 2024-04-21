@@ -41,24 +41,6 @@ RSpec.describe(SecuredWithArgon2) do
     end
   end
 
-  describe '#argon2_secret' do
-    it 'returns nil by default' do
-      expect(test_instance.argon2_secret).to be_nil
-    end
-
-    context 'with CRISP_RSS_SECRET_KEY set' do
-      let(:secret_key) { 'topsecret' }
-
-      before do
-        allow(Rails.env).to receive(:[]).with('CRISP_RSS_SECRET_KEY').and_return(secret_key)
-      end
-
-      it 'returns the secret key value' do
-        expect(test_instance.argon2_secret).to eq secret_key
-      end
-    end
-  end
-
   describe '#authenticate' do
     let(:actual_password) { 'this-is-an-actual-password' }
 
