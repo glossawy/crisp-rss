@@ -33,7 +33,7 @@ export const Route = createFileRoute('/')({
     if (session) {
       if (search.redirect) {
         router.history.push(search.redirect)
-        return null
+        return <div></div>
       } else {
         return <Navigate to="/home" />
       }

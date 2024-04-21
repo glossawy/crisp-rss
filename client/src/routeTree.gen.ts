@@ -14,22 +14,36 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
+import { Route as HomeLayoutImport } from './routes/home/_layout'
 
 // Create Virtual Routes
 
-const HomeIndexLazyImport = createFileRoute('/home/')()
+const HomeImport = createFileRoute('/home')()
+const HomeLayoutIndexLazyImport = createFileRoute('/home/_layout/')()
 
 // Create/Update Routes
+
+const HomeRoute = HomeImport.update({
+  path: '/home',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const HomeIndexLazyRoute = HomeIndexLazyImport.update({
-  path: '/home/',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/home/index.lazy').then((d) => d.Route))
+const HomeLayoutRoute = HomeLayoutImport.update({
+  id: '/_layout',
+  getParentRoute: () => HomeRoute,
+} as any)
+
+const HomeLayoutIndexLazyRoute = HomeLayoutIndexLazyImport.update({
+  path: '/',
+  getParentRoute: () => HomeLayoutRoute,
+} as any).lazy(() =>
+  import('./routes/home/_layout/index.lazy').then((d) => d.Route),
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -39,15 +53,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/home/': {
-      preLoaderRoute: typeof HomeIndexLazyImport
+    '/home': {
+      preLoaderRoute: typeof HomeImport
       parentRoute: typeof rootRoute
+    }
+    '/home/_layout': {
+      preLoaderRoute: typeof HomeLayoutImport
+      parentRoute: typeof HomeRoute
+    }
+    '/home/_layout/': {
+      preLoaderRoute: typeof HomeLayoutIndexLazyImport
+      parentRoute: typeof HomeLayoutImport
     }
   }
 }
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren([IndexRoute, HomeIndexLazyRoute])
+export const routeTree = rootRoute.addChildren([
+  IndexRoute,
+  HomeRoute.addChildren([
+    HomeLayoutRoute.addChildren([HomeLayoutIndexLazyRoute]),
+  ]),
+])
 
 /* prettier-ignore-end */
