@@ -7,9 +7,10 @@ module SecuredWithArgon2
   extend ActiveSupport::Concern
 
   ARGON2_MAX_INPUT_BYTES = 127
+  ARGON2_KEYGEN = [ENV.fetch('CRISPRSS_ARGON2_SALT'), 512].freeze
 
   def argon2_secret
-    Rails.env['CRISP_RSS_SECRET_KEY'].presence
+    Rails.application.key_generator.generate_key(*ARGON2_KEYGEN)
   end
 
   def argon2_profile

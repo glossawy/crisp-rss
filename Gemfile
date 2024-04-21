@@ -27,8 +27,10 @@ gem 'rack-cors'
 
 gem 'acts_as_paranoid', '~> 0.9.0'
 gem 'argon2', '~> 2.3'
+gem 'ed25519', '~> 1.3'
 gem 'feedjira', '~> 3.2'
 gem 'interactor', '~> 3.1'
+gem 'jwt', '~> 2.8'
 gem 'request_store', '~> 1.6'
 gem 'validates_email_format_of', '~> 1.8'
 gem 'validate_url', '~> 1.0'
@@ -37,6 +39,7 @@ group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'annotate', '~> 3.2'
   gem 'debug', platforms: %i[mri windows]
+  gem 'dotenv', '~> 3.1'
 end
 
 group :development do

@@ -15,10 +15,10 @@ module CurrentSession
       RequestStore.store[STORE_KEY] = session.nil? ? nil : SessionInfo.new(session)
     end
 
-    def session_info
+    def session_storage
       RequestStore.store[STORE_KEY]
     end
 
-    delegate :session, :user, :token, to: :session_info, allow_nil: true
+    delegate :session, :user, :token, to: :session_storage, allow_nil: true
   end
 end

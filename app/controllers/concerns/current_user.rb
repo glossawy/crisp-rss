@@ -4,7 +4,7 @@ module CurrentUser
   extend ActiveSupport::Concern
 
   def set_current_session
-    CurrentSession.session_token = session[:token]
+    CurrentSession.session_token = jwt.session_token
   end
 
   def current_user

@@ -8,11 +8,10 @@ class SignInUser
 
     context.fail! unless user&.authenticate(context.password)
 
-    token = Sessions::Manager.new(user).create_new_session!
+    session_info = Sessions::Manager.new(user).create_new_session!
 
     context.user = user
-    context.session = user.sessions.find_by!(session_token: token)
-    context.token = token
+    context.session_info = session_info
   end
 
   def session_manager

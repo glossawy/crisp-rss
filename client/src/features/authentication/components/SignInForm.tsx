@@ -8,6 +8,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -20,7 +21,6 @@ import {
 import { Input } from '@/components/ui/input'
 import { sessionsClient } from '@/features/authentication/api'
 import useSession from '@/features/authentication/hooks/useSession'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
 const SignInSchema = z.object({
   email: z.string().email({ message: 'Not a valid email address' }),
@@ -46,7 +46,16 @@ export default function SignInForm() {
     })
 
     if (response.status === 201) {
-      setSession(response.body)
+      const token = response.headers.get('Access-Token')
+      const expiry = response.headers.get('Expire-At')
+
+      console.debug(Object.fromEntries(response.headers.entries()))
+      if (token == null || expiry == null)
+        throw new Error(
+          'Successful authentication response but missing Access-Token or Expire-At headers',
+        )
+
+      setSession({ jwt: token, expires_at: expiry })
     } else {
       form.setError('root', { message: 'Email or password was incorrect' })
     }

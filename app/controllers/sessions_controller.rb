@@ -5,11 +5,11 @@ class SessionsController < AuthenticatedController
 
   def check
     user_session = CurrentSession.session
-    session.send :load!
-    Rails.logger.info([user_session, session.to_h])
 
     if user_session.blank?
-      head :bad_request
+      render status: :bad_request, json: {
+        message: 'Access token not provided with request',
+      }
     else
       render locals: { session: user_session }
     end
@@ -19,15 +19,24 @@ class SessionsController < AuthenticatedController
     result = SignInUser.call(create_params)
 
     if result.success?
-      reset_session
-      session[:auth_token] = result.token
-      render 'sessions/check', status: :created, locals: { session: result.session }
+      prepare_access_token_headers!(result.session_info)
+      head :created
     else
-      head :bad_request
+      render status: :bad_request, json: {
+        message: 'Login failed',
+      }
     end
   end
 
   private
+
+  def prepare_access_token_headers!(session_info)
+    session_info in { token:, expires_at: }
+
+    encoded = Sessions::Jwt.new({ session_token: token }).encode
+    response.headers['Access-Token'] = encoded.token
+    response.headers['Expire-At'] = expires_at.iso8601
+  end
 
   def create_params
     params.require(:user).permit(:email, :password)

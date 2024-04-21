@@ -4,20 +4,24 @@ import { sessionsClient } from '@/features/authentication/api'
 import useSession from '@/features/authentication/hooks/useSession'
 
 export default function SessionHeartbeat() {
-  const { session, setSession, clearSession } = useSession()
+  const { session, authHeader, setSession, clearSession } = useSession()
 
   useEffect(() => {
     if (session?.expires_at == null) return
 
     const checkSession = async () => {
-      const response = await sessionsClient.checkSession.query()
+      const response = await sessionsClient.checkSession.query({
+        headers: {
+          authorization: authHeader,
+        },
+      })
 
       if (
         response.status === 200 &&
         session.expires_at !== response.body.expires_at
       ) {
-        setSession(response.body)
-      } else {
+        setSession({ ...session, expires_at: response.body.expires_at })
+      } else if (response.status !== 200) {
         clearSession()
       }
     }

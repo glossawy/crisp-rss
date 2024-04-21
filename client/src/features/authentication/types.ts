@@ -1,4 +1,3 @@
-export type SessionInfo = {
-  active: boolean
+export type CheckSessionResponse = {
   expires_at: string
 }

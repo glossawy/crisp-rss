@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Sessions
-  class Token
+  module Token
     attr_reader :value
 
     ENTROPY_BITS = 128
@@ -14,11 +14,5 @@ module Sessions
     def self.generate_token_value
       SecureRandom.base36(BASE36_LEN)
     end
-
-    def initialize(value = generate_token_value)
-      @value = value
-    end
-
-    delegate :generate_token_value, to: :class
   end
 end

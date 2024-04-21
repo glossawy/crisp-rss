@@ -4,6 +4,8 @@ module Sessions
   class Manager
     attr_reader :user
 
+    SessionInfo = Struct.new(:token, :expires_at)
+
     EXPIRES_IN = 1.day
 
     def initialize(user)
@@ -18,11 +20,14 @@ module Sessions
 
     def create_new_session!
       session = sessions.create!(
-        session_token: Sessions::Token.new.value,
+        session_token: Sessions::Token.generate_token_value,
         expires_at: EXPIRES_IN.from_now
       )
 
-      session.session_token
+      SessionInfo.new(
+        session.session_token,
+        session.expires_at,
+      )
     end
 
     def revoke_session!(session_token)

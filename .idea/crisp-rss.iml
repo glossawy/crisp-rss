@@ -394,6 +394,8 @@
               <RakeTaskImpl description="" fullCommand="active_storage:update" id="update" />
             </subtasks>
           </RakeTaskImpl>
+          <RakeTaskImpl description="Add schema information (as comments) to model and fixture files" fullCommand="annotate_models" id="annotate_models" />
+          <RakeTaskImpl description="Adds the route map to routes.rb" fullCommand="annotate_routes" id="annotate_routes" />
           <RakeTaskImpl id="app">
             <subtasks>
               <RakeTaskImpl description="Apply the template supplied by LOCATION=(/path/to/template) or URL" fullCommand="app:template" id="template" />
@@ -515,6 +517,8 @@
               <RakeTaskImpl description="Truncate all/specified *.log files in log/ to zero bytes (specify which logs with LOGS=test,development)" fullCommand="log:clear" id="clear" />
             </subtasks>
           </RakeTaskImpl>
+          <RakeTaskImpl description="Remove schema information from model and fixture files" fullCommand="remove_annotation" id="remove_annotation" />
+          <RakeTaskImpl description="Removes the route map from routes.rb" fullCommand="remove_routes" id="remove_routes" />
           <RakeTaskImpl description="Report code statistics (KLOCs, etc) from the application or engine" fullCommand="stats" id="stats" />
           <RakeTaskImpl description="Run all tests in test folder except system ones" fullCommand="test" id="test" />
           <RakeTaskImpl id="test">
@@ -602,6 +606,7 @@
               </RakeTaskImpl>
             </subtasks>
           </RakeTaskImpl>
+          <RakeTaskImpl description="" fullCommand="set_annotation_options" id="set_annotation_options" />
           <RakeTaskImpl description="" fullCommand="tmp" id="tmp" />
           <RakeTaskImpl description="" fullCommand="tmp/cache" id="tmp/cache" />
           <RakeTaskImpl description="" fullCommand="tmp/cache/assets" id="tmp/cache/assets" />

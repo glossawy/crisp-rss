@@ -1,8 +1,12 @@
 import { useCallback } from 'react'
 
-import { SessionInfo } from '@/features/authentication/types'
 import useLocalStorage from '@/hooks/useLocalStorage'
 import { StorageKeys } from '@/lib/storageKeys'
+
+export type SessionInfo = {
+  jwt: string
+  expires_at: string
+}
 
 export default function useSession() {
   const [session, setSession] = useLocalStorage<SessionInfo | null>(
@@ -10,9 +14,11 @@ export default function useSession() {
     null,
   )
 
+  const authHeader = `Bearer ${session?.jwt}`
+
   const clearSession = useCallback(() => {
     setSession(null)
   }, [setSession])
 
-  return { session, setSession, clearSession }
+  return { session, authHeader, setSession, clearSession }
 }

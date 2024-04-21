@@ -18,6 +18,9 @@ require:
 AllCops:
   NewCops: enable
 
+Rails/NotNullColumn:
+  Enabled: false
+
 Style/TrailingCommaInArrayLiteral:
   EnforcedStyleForMultiline: consistent_comma
 
