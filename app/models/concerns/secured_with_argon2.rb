@@ -36,7 +36,7 @@ module SecuredWithArgon2
           instance_variable_set(:"@#{password_attr}", plaintext)
           hashed = Argon2::Password.create(plaintext, {
                                              profile: argon2_profile,
-                                             secret: argon2_secret
+                                             secret: argon2_secret,
                                            })
           public_send(:"#{password_attr}_hash=", hashed)
         end

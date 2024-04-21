@@ -28,10 +28,10 @@ class User < ApplicationRecord
   validates :display_name, presence: true, length: {
     minimum: 2,
     maximum: 255,
-    message: 'must be at between 2 and 255 characters long'
+    message: 'must be at between 2 and 255 characters long',
   }, format: {
     with: /\A\S+\z/i,
-    message: 'cannot contain any whitespace'
+    message: 'cannot contain any whitespace',
   }
   validates :password, length: { minimum: 8 }
 

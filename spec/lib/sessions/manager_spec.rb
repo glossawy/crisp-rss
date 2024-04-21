@@ -4,9 +4,9 @@ require 'rails_helper'
 
 RSpec.describe Sessions::Manager do
   let_it_be(:user) { create(:user) }
-  let(:manager_instance) { described_class.new(user) }
-
   subject(:manager) { manager_instance }
+
+  let(:manager_instance) { described_class.new(user) }
 
   describe '#create_new_session!' do
     it 'returns a session token' do

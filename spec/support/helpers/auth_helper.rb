@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module AuthHelper
   def login!(user_session)
     CurrentSession.session_token = user_session.session_token

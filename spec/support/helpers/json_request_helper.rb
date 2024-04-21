@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module JsonRequestHelper
   def json_get(*, **) = get(*, **, as: :json)
   def json_patch(*, **) = patch(*, **, as: :json)

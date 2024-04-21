@@ -29,7 +29,7 @@ class UserSession < ApplicationRecord
 
   validates :session_token, presence: true, uniqueness: true, format: {
     with: /\A[a-z0-9]+\z/,
-    message: 'must be a lowercase alphanumeric string'
+    message: 'must be a lowercase alphanumeric string',
   }, length: { is: Sessions::Token.token_length }
 
   def expire!
