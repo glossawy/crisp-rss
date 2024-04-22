@@ -20,6 +20,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import useSession from '@/features/authentication/hooks/useSession'
 import { authenticate } from '@/features/authentication/lib/auth'
 
 const SignInSchema = z.object({
@@ -30,6 +31,7 @@ const SignInSchema = z.object({
 type SignInData = z.infer<typeof SignInSchema>
 
 export default function SignInForm() {
+  const { setSession } = useSession()
   const [showPassword, setShowPassword] = useState(false)
   const { isLoading } = useRouterState()
 
@@ -42,9 +44,11 @@ export default function SignInForm() {
   })
 
   const onSubmit = async (credentials: SignInData) => {
-    const authenticated = await authenticate(credentials)
+    const session = await authenticate(credentials)
 
-    if (!authenticated) {
+    if (session) {
+      setSession(session)
+    } else {
       form.setError('root', { message: 'Email or password was incorrect' })
     }
   }

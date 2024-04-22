@@ -5,7 +5,7 @@ import {
   CreateSessionRequest,
   sessionsClient,
 } from '@/features/authentication/api'
-import { clearStoredData, fetchStoredData, storeData } from '@/lib/storage'
+import { fetchStoredData } from '@/lib/storage'
 import { StorageKeys } from '@/lib/storageKeys'
 import { bearerToken } from '@/services/utils'
 
@@ -16,16 +16,8 @@ export type SessionInfo = {
   expires_at: string
 }
 
-function saveSessionInfo(session: SessionInfo) {
-  storeData(StorageKeys.session, session)
-}
-
 function fetchSessionInfo() {
   return fetchStoredData(StorageKeys.session)
-}
-
-function clearSessionInfo() {
-  return clearStoredData(StorageKeys.session)
 }
 
 export function isAuthenticated() {
@@ -37,7 +29,7 @@ export function isAuthenticated() {
   return !isPast(expiry)
 }
 
-export async function logout() {
+export async function logout(): Promise<boolean> {
   const session = fetchSessionInfo()
 
   if (session) {
@@ -47,13 +39,17 @@ export async function logout() {
       },
     })
 
-    if (response.status in [200, 400]) {
-      clearSessionInfo()
+    if ([200, 400].includes(response.status)) {
+      return true
     }
   }
+
+  return false
 }
 
-export async function authenticate(params: AuthenticateParams) {
+export async function authenticate(
+  params: AuthenticateParams,
+): Promise<SessionInfo | null> {
   const response = await sessionsClient.createSession.mutation({
     body: { user: params },
   })
@@ -67,10 +63,8 @@ export async function authenticate(params: AuthenticateParams) {
         'Received successful login response but missing Access-Token or Expire-At header',
       )
 
-    saveSessionInfo({ jwt, expires_at: expiry })
-
-    return true
+    return { jwt, expires_at: expiry }
   } else {
-    return false
+    return null
   }
 }

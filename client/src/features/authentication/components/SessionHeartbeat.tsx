@@ -12,7 +12,7 @@ export default function SessionHeartbeat() {
   const { location } = useRouterState()
 
   useEffect(() => {
-    if (location.pathname in ['', '/']) return
+    if (['', '/'].includes(location.pathname)) return
 
     const checkSession = async () => {
       const response = await sessionsClient.checkSession.query({
@@ -38,7 +38,7 @@ export default function SessionHeartbeat() {
     return () => {
       clearInterval(interval)
     }
-  }, [location.pathname, session?.expires_at, clearSession])
+  }, [location.pathname, session?.jwt])
 
   return null
 }
