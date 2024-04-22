@@ -8,6 +8,11 @@ import {
   NavigationMenuList,
 } from '@/components/ui/navigation-menu'
 import { navigationMenuTriggerStyle } from '@/components/ui/navigation-menu-styles'
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from '@/components/ui/resizable'
 import useSession from '@/features/authentication/hooks/useSession'
 import { logout } from '@/features/authentication/lib/auth'
 import { cn } from '@/lib/utils'
@@ -23,12 +28,14 @@ export const Route = createLazyFileRoute('/home/_layout/')({
     }, [clearSession])
 
     return (
-      <>
-        <NavigationMenu className="min-w-full justify-start">
+      <div className="h-full flex flex-col">
+        <NavigationMenu className="min-w-full justify-start border-b-2">
           <NavigationMenuList>
             <NavigationMenuItem>
               <Link to="/home">
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                <NavigationMenuLink
+                  className={cn(navigationMenuTriggerStyle())}
+                >
                   Home
                 </NavigationMenuLink>
               </Link>
@@ -43,8 +50,14 @@ export const Route = createLazyFileRoute('/home/_layout/')({
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
-        <main>Test</main>
-      </>
+        <ResizablePanelGroup className="flex-grow" direction="horizontal">
+          <ResizablePanel defaultSize={10} maxSize={25} minSize={5}>
+            Wow!
+          </ResizablePanel>
+          <ResizableHandle />
+          <ResizablePanel defaultSize={90}>Test</ResizablePanel>
+        </ResizablePanelGroup>
+      </div>
     )
   },
 })
