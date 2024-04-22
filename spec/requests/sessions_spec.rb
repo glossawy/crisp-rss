@@ -18,10 +18,8 @@ RSpec.describe 'Sessions' do
     context 'when sessions is expired' do
       let(:user_session) { create(:user_session, :expired) }
 
-      before { login!(user_session) }
-
       it 'returns a 400' do
-        json_get sessions_check_path
+        auth_get sessions_check_path, session: user_session
 
         expect(response).to have_http_status :bad_request
       end
@@ -30,18 +28,45 @@ RSpec.describe 'Sessions' do
     context 'when authenticated' do
       let(:user_session) { create(:user_session) }
 
-      before { login!(user_session) }
-
       it 'returns a 200' do
-        json_get sessions_check_path
+        auth_get sessions_check_path, session: user_session
         expect(response).to have_http_status :ok
       end
 
       it 'returns the expiry' do
-        json_get sessions_check_path
+        auth_get sessions_check_path, session: user_session
 
         expect(response_hash)
           .to eq(expires_at: user_session.expires_at.iso8601)
+      end
+    end
+  end
+
+  describe 'GET /sessions/logout' do
+    it 'returns a 400 when no token provided' do
+      json_get sessions_logout_path
+
+      expect(response).to have_http_status :bad_request
+    end
+
+    context 'with an auth token' do
+      let(:session) { create :user_session }
+
+      it 'returns a 200' do
+        auth_get(sessions_logout_path, session:)
+
+        expect(response).to have_http_status :ok
+      end
+
+      it 'returns the new expiry for the session' do
+        auth_get(sessions_logout_path, session:)
+
+        expect(response_hash[:expires_at]).to eq session.reload.expires_at.iso8601
+      end
+
+      it 'expires the session' do
+        expect { auth_get(sessions_logout_path, session:) }
+          .to change { session.reload.active? }.from(true).to(false)
       end
     end
   end

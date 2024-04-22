@@ -5,7 +5,6 @@ class SessionsController < AuthenticatedController
 
   def check
     user_session = CurrentSession.session
-
     if user_session.blank? || !user_session.active?
       render status: :bad_request, json: {
         message: 'Access token not provided with request',
