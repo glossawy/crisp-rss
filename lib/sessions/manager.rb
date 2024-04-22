@@ -24,16 +24,15 @@ module Sessions
         expires_at: EXPIRES_IN.from_now
       )
 
-      SessionInfo.new(
-        session.session_token,
-        session.expires_at,
-      )
+      SessionInfo.new(session.session_token, session.expires_at)
     end
 
     def revoke_session!(session_token)
       session = sessions.find_by!(session_token:)
 
       session.expire! if session.active?
+
+      SessionInfo.new(session.session_token, session.expires_at)
     end
   end
 end

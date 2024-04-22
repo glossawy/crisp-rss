@@ -28,6 +28,18 @@ class SessionsController < AuthenticatedController
     end
   end
 
+  def logout
+    result = LogOutUser.call(token: CurrentSession.token)
+
+    if result.success?
+      render locals: { session: result.session }
+    else
+      render status: :bad_request, json: {
+        message: 'Access token not provided with request',
+      }
+    end
+  end
+
   private
 
   def prepare_access_token_headers!(session_info)

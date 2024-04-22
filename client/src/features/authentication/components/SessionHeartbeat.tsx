@@ -21,9 +21,9 @@ export default function SessionHeartbeat() {
         },
       })
 
-      if (response.status !== 200) {
+      if (response.status === 400) {
         clearSession()
-      } else {
+      } else if (response.status === 200) {
         const expiry = parseISO(response.body.expires_at)
 
         // Sign-out early if session expires soon or has expired

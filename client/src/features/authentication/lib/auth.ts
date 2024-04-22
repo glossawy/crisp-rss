@@ -5,8 +5,9 @@ import {
   CreateSessionRequest,
   sessionsClient,
 } from '@/features/authentication/api'
-import { fetchStoredData, storeData } from '@/lib/storage'
+import { clearStoredData, fetchStoredData, storeData } from '@/lib/storage'
 import { StorageKeys } from '@/lib/storageKeys'
+import { bearerToken } from '@/services/utils'
 
 type AuthenticateParams = z.infer<typeof CreateSessionRequest>['user']
 
@@ -23,6 +24,10 @@ function fetchSessionInfo() {
   return fetchStoredData(StorageKeys.session)
 }
 
+function clearSessionInfo() {
+  return clearStoredData(StorageKeys.session)
+}
+
 export function isAuthenticated() {
   const session = fetchSessionInfo()
 
@@ -30,6 +35,22 @@ export function isAuthenticated() {
 
   const expiry = parseISO(session.expires_at)
   return !isPast(expiry)
+}
+
+export async function logout() {
+  const session = fetchSessionInfo()
+
+  if (session) {
+    const response = await sessionsClient.expireSession.query({
+      headers: {
+        authorization: bearerToken(session.jwt),
+      },
+    })
+
+    if (response.status in [200, 400]) {
+      clearSessionInfo()
+    }
+  }
 }
 
 export async function authenticate(params: AuthenticateParams) {

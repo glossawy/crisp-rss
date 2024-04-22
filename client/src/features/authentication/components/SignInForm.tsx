@@ -4,6 +4,7 @@ import {
   EyeClosedIcon,
   EyeOpenIcon,
 } from '@radix-ui/react-icons'
+import { useRouterState } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -30,12 +31,14 @@ type SignInData = z.infer<typeof SignInSchema>
 
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false)
+  const { isLoading } = useRouterState()
 
   const form = useForm<SignInData>({
     resolver: zodResolver(SignInSchema),
     defaultValues: {
       email: '',
     },
+    disabled: isLoading,
   })
 
   const onSubmit = async (credentials: SignInData) => {

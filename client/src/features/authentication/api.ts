@@ -1,7 +1,10 @@
 import { initContract } from '@ts-rest/core'
 import { z } from 'zod'
 
-import { CheckSessionResponse } from '@/features/authentication/types'
+import {
+  CheckSessionResponse,
+  ExpireSessionResponse,
+} from '@/features/authentication/types'
 import createClient from '@/services/createClient'
 import { MessageResponse } from '@/services/types'
 
@@ -21,7 +24,7 @@ export const contract = c.router({
     summary: 'Create a new session for a user',
     responses: {
       201: c.type<MessageResponse>(),
-      400: c.noBody(),
+      400: c.type<MessageResponse>(),
     },
     body: CreateSessionRequest,
   },
@@ -31,7 +34,19 @@ export const contract = c.router({
     summary: 'Check the current user session',
     responses: {
       200: c.type<CheckSessionResponse>(),
-      400: c.noBody(),
+      400: c.type<MessageResponse>(),
+    },
+    headers: z.object({
+      authorization: z.string(),
+    }),
+  },
+  expireSession: {
+    method: 'GET',
+    path: '/sessions/logout',
+    summary: 'Log out of the current user session',
+    responses: {
+      200: c.type<ExpireSessionResponse>(),
+      400: c.type<MessageResponse>(),
     },
     headers: z.object({
       authorization: z.string(),

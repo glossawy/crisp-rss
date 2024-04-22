@@ -8,5 +8,6 @@ Rails.application.routes.draw do
   get 'up' => 'rails/health#show', as: :rails_health_check
 
   get '/sessions/check', to: 'sessions#check'
+  get '/sessions/logout', to: 'sessions#logout'
   resources :sessions, only: %i[create]
 end

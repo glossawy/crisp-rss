@@ -30,19 +30,16 @@ export const Route = createFileRoute('/')({
       location: { search },
     } = useRouterState()
 
-    if (session) {
-      if (search.redirect) {
-        router.history.push(search.redirect)
-        return <div></div>
-      } else {
-        return <Navigate to="/home" />
-      }
-    } else {
-      return (
-        <main className="w-screen h-screen bg-slate-100 flex flex-col items-center place-content-center">
-          <SignInCard />
-        </main>
-      )
+    if (session && search.redirect) {
+      router.history.push(search.redirect)
+    } else if (session) {
+      return <Navigate to="/home" startTransition />
     }
+
+    return (
+      <main className="w-screen h-screen bg-slate-100 flex flex-col items-center place-content-center">
+        <SignInCard />
+      </main>
+    )
   },
 })
