@@ -1,17 +1,11 @@
 # frozen_string_literal: true
 
 class SessionsController < AuthenticatedController
-  skip_authentication!
+  skip_authentication! only: :create
 
   def check
     user_session = CurrentSession.session
-    if user_session.blank? || !user_session.active?
-      render status: :bad_request, json: {
-        message: 'Access token not provided with request',
-      }
-    else
-      render locals: { session: user_session }
-    end
+    render locals: { session: user_session }
   end
 
   def create
@@ -34,7 +28,7 @@ class SessionsController < AuthenticatedController
       render locals: { session: result.session }
     else
       render status: :bad_request, json: {
-        message: 'Access token not provided with request',
+        message: result.reason,
       }
     end
   end

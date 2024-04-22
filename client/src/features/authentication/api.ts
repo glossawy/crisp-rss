@@ -17,41 +17,48 @@ export const CreateSessionRequest = z.object({
   }),
 })
 
-export const contract = c.router({
-  createSession: {
-    method: 'POST',
-    path: '/sessions',
-    summary: 'Create a new session for a user',
-    responses: {
-      201: c.type<MessageResponse>(),
-      400: c.type<MessageResponse>(),
+export const contract = c.router(
+  {
+    createSession: {
+      method: 'POST',
+      path: '/sessions',
+      summary: 'Create a new session for a user',
+      responses: {
+        201: c.type<MessageResponse>(),
+        400: c.type<MessageResponse>(),
+      },
+      body: CreateSessionRequest,
     },
-    body: CreateSessionRequest,
-  },
-  checkSession: {
-    method: 'GET',
-    path: '/sessions/check',
-    summary: 'Check the current user session',
-    responses: {
-      200: c.type<CheckSessionResponse>(),
-      400: c.type<MessageResponse>(),
+    checkSession: {
+      method: 'GET',
+      path: '/sessions/check',
+      summary: 'Check the current user session',
+      responses: {
+        200: c.type<CheckSessionResponse>(),
+      },
+      headers: z.object({
+        authorization: z.string(),
+      }),
     },
-    headers: z.object({
-      authorization: z.string(),
-    }),
-  },
-  expireSession: {
-    method: 'GET',
-    path: '/sessions/logout',
-    summary: 'Log out of the current user session',
-    responses: {
-      200: c.type<ExpireSessionResponse>(),
-      400: c.type<MessageResponse>(),
+    expireSession: {
+      method: 'GET',
+      path: '/sessions/logout',
+      summary: 'Log out of the current user session',
+      responses: {
+        200: c.type<ExpireSessionResponse>(),
+        400: c.type<MessageResponse>(),
+      },
+      headers: z.object({
+        authorization: z.string(),
+      }),
     },
-    headers: z.object({
-      authorization: z.string(),
-    }),
   },
-})
+  {
+    commonResponses: {
+      401: c.type<MessageResponse>(),
+    },
+    strictStatusCodes: true,
+  },
+)
 
 export const sessionsClient = createClient(contract)

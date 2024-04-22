@@ -4,6 +4,8 @@ module Sessions
   class Manager
     attr_reader :user
 
+    SessionNotFound = Class.new(StandardError)
+
     SessionInfo = Struct.new(:token, :expires_at)
 
     EXPIRES_IN = 1.day
@@ -33,6 +35,8 @@ module Sessions
       session.expire! if session.active?
 
       SessionInfo.new(session.session_token, session.expires_at)
+    rescue ActiveRecord::NotFoundError
+      raise SessionNotFound, 'Token does not match a session'
     end
   end
 end

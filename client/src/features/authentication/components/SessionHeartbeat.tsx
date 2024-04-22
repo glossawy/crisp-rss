@@ -21,7 +21,7 @@ export default function SessionHeartbeat() {
         },
       })
 
-      if (response.status === 400) {
+      if (response.status === 401) {
         clearSession()
       } else if (response.status === 200) {
         const expiry = parseISO(response.body.expires_at)

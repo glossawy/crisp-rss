@@ -9,19 +9,19 @@ RSpec.describe 'Sessions' do
 
   describe 'GET /sessions/check' do
     context 'when not authenticated' do
-      it 'returns a 400' do
+      it 'returns a 401' do
         json_get sessions_check_path
-        expect(response).to have_http_status :bad_request
+        expect(response).to have_http_status :unauthorized
       end
     end
 
     context 'when sessions is expired' do
       let(:user_session) { create(:user_session, :expired) }
 
-      it 'returns a 400' do
+      it 'returns a 401' do
         auth_get sessions_check_path, session: user_session
 
-        expect(response).to have_http_status :bad_request
+        expect(response).to have_http_status :unauthorized
       end
     end
 
@@ -43,10 +43,10 @@ RSpec.describe 'Sessions' do
   end
 
   describe 'GET /sessions/logout' do
-    it 'returns a 400 when no token provided' do
+    it 'returns a 401 when no token provided' do
       json_get sessions_logout_path
 
-      expect(response).to have_http_status :bad_request
+      expect(response).to have_http_status :unauthorized
     end
 
     context 'with an auth token' do

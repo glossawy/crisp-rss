@@ -3,6 +3,8 @@
 module SessionAuthentication
   extend ActiveSupport::Concern
 
+  include ActionController::HttpAuthentication::Token::ControllerMethods
+
   def authenticate!
     return if skip_authentication?
 
@@ -33,14 +35,14 @@ module SessionAuthentication
   included do
     before_action :authenticate!
 
-    # rescue_from JWT::DecodeError do
-    #   render_unauthenticated
-    # end
+    rescue_from JWT::DecodeError do
+      render_unauthenticated
+    end
   end
 
   class_methods do
     def skip_authentication!(only: [:all])
-      skip_authentication_actions.concat(only.map(&:to_sym))
+      skip_authentication_actions.concat(Array.wrap(only).map(&:to_sym))
     end
 
     def skip_authentication_actions
