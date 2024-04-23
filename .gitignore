@@ -45,3 +45,5 @@
 
 /node_modules
 /.ruby-lsp
+
+spec/examples.txt
