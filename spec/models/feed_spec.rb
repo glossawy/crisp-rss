@@ -4,12 +4,15 @@
 #
 # Table name: feeds
 #
-#  id         :bigint           not null, primary key
-#  interval   :integer          not null
-#  url        :string           not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  user_id    :uuid             not null
+#  id              :bigint           not null, primary key
+#  content         :binary
+#  error_message   :string
+#  interval        :integer          not null
+#  last_fetched_at :datetime
+#  url             :string           not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  user_id         :uuid             not null
 #
 # Indexes
 #

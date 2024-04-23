@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_23_212524) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_23_220944) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,6 +20,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_23_212524) do
     t.integer "interval", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "error_message"
+    t.binary "content"
+    t.datetime "last_fetched_at", precision: nil
     t.index ["user_id"], name: "index_feeds_on_user_id"
   end
 
@@ -101,20 +104,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_23_212524) do
     t.index ["priority", "created_at"], name: "index_good_jobs_jobs_on_priority_created_at_when_unfinished", order: { priority: "DESC NULLS LAST" }, where: "(finished_at IS NULL)"
     t.index ["queue_name", "scheduled_at"], name: "index_good_jobs_on_queue_name_and_scheduled_at", where: "(finished_at IS NULL)"
     t.index ["scheduled_at"], name: "index_good_jobs_on_scheduled_at", where: "(finished_at IS NULL)"
-  end
-
-  create_table "queue_classic_jobs", force: :cascade do |t|
-    t.text "q_name", null: false
-    t.text "method", null: false
-    t.jsonb "args", null: false
-    t.timestamptz "locked_at"
-    t.integer "locked_by"
-    t.timestamptz "created_at", default: -> { "now()" }
-    t.timestamptz "scheduled_at", default: -> { "now()" }
-    t.index ["q_name", "id"], name: "idx_qc_on_name_only_unlocked", where: "(locked_at IS NULL)"
-    t.index ["scheduled_at", "id"], name: "idx_qc_on_scheduled_at_only_unlocked", where: "(locked_at IS NULL)"
-    t.check_constraint "length(method) > 0", name: "queue_classic_jobs_method_check"
-    t.check_constraint "length(q_name) > 0", name: "queue_classic_jobs_q_name_check"
   end
 
   create_table "user_sessions", force: :cascade do |t|

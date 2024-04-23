@@ -28,6 +28,7 @@ services:
     env_file:
       - .env
     environment:
+      - CRISPRSS_MODE=queue
       - DB_USER=crisprss
       - DB_PASSWORD=crisprss
       - DB_HOST=db
@@ -38,7 +39,6 @@ services:
       - bundler-cache:/usr/local/bundle
     networks:
       - crisprss
-    command: bundle exec good_job start
 
   db:
     image: 'postgres:16-alpine'
