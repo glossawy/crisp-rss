@@ -29,13 +29,13 @@ RSpec.describe Sessions::Manager do
   describe '#revoke_session!' do
     context 'with a nil token' do
       it 'raises a record not found error' do
-        expect { manager.revoke_session!(nil) }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { manager.revoke_session!(nil) }.to raise_error(described_class::SessionNotFound)
       end
     end
 
     context 'with a blank token' do
       it 'raises a record not found error' do
-        expect { manager.revoke_session!('   ') }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { manager.revoke_session!('   ') }.to raise_error(described_class::SessionNotFound)
       end
     end
 

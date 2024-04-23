@@ -35,7 +35,7 @@ module Sessions
       session.expire! if session.active?
 
       SessionInfo.new(user.id, session.session_token, session.expires_at)
-    rescue ActiveRecord::NotFoundError
+    rescue ActiveRecord::RecordNotFound
       raise SessionNotFound, 'Token does not match a session'
     end
   end

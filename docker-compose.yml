@@ -7,7 +7,6 @@ services:
     env_file:
       - .env
     environment:
-      - RAILS_ENV=development
       - DB_USER=crisprss
       - DB_PASSWORD=crisprss
       - DB_HOST=db

@@ -88,6 +88,25 @@ RSpec.describe 'Sessions' do
 
         expect(response).to have_http_status(:created)
       end
+
+      it 'returns token headers' do
+        json_post(sessions_path, params:)
+
+        expect(response.headers['access-token']).to be_present
+        expect(response.headers['expire-at']).to be_present
+      end
+
+      it 'returns session token and user in JWT' do
+        json_post(sessions_path, params:)
+
+        access_token = response.headers['access-token']
+        decoded = Sessions::Jwt::Encoded.new(access_token).decode
+
+        expect(decoded.payload).to eq(
+          session_token: user.sessions.last.session_token,
+          user_id: user.id
+        )
+      end
     end
   end
 end
