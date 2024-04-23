@@ -10,6 +10,7 @@ services:
       - DB_USER=crisprss
       - DB_PASSWORD=crisprss
       - DB_HOST=db
+      - CACHE_URL=redis://default:crisprss@cache:6379/0
     ports:
       - '3000:3000'
     volumes:
@@ -30,9 +31,22 @@ services:
     networks:
       - crisprss
 
+  cache:
+    image: docker.dragonflydb.io/dragonflydb/dragonfly
+    restart: unless-stopped
+    environment:
+      - DFLY_requirepass=crisprss
+    networks:
+      - crisprss
+    volumes:
+      - cache-data:/data
+    ulimits:
+      memlock: -1
+
 volumes:
   bundler-cache:
   postgres-data:
+  cache-data:
 
 networks:
   crisprss:

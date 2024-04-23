@@ -5,7 +5,8 @@
 # Table name: feed_fetch_attempts
 #
 #  id         :bigint           not null, primary key
-#  perform_at :datetime         not null
+#  reason     :string
+#  state      :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  feed_id    :bigint           not null

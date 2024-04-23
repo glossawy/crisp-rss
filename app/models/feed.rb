@@ -22,8 +22,8 @@
 class Feed < ApplicationRecord
   belongs_to :user
 
-  has_many :attempts, class_name: 'FeedFetchAttempt', dependent: :destroy
-
   validates :url, presence: true, url: { no_local: true }
-  validates :interval, presence: true, numericality: { only_integer: true, greater_than: 0 }
+
+  # Interval in minutes
+  validates :interval, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 30 }
 end
