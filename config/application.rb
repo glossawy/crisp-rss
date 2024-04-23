@@ -17,6 +17,8 @@ module CrispRss
       g.test_framework :rspec
     end
 
+    config.active_job.queue_adapter = :good_job
+
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
