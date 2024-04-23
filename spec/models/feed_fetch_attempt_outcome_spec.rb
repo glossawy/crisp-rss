@@ -4,12 +4,12 @@
 #
 # Table name: feed_fetch_attempt_outcomes
 #
-#  id                    :integer          not null, primary key
+#  id                    :bigint           not null, primary key
 #  reason                :string
 #  state                 :string
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
-#  feed_fetch_attempt_id :integer          not null
+#  feed_fetch_attempt_id :bigint           not null
 #
 # Indexes
 #
@@ -17,7 +17,7 @@
 #
 # Foreign Keys
 #
-#  feed_fetch_attempt_id  (feed_fetch_attempt_id => feed_fetch_attempts.id)
+#  fk_rails_...  (feed_fetch_attempt_id => feed_fetch_attempts.id)
 #
 require 'rails_helper'
 

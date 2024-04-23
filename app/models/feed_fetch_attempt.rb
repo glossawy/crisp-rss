@@ -4,11 +4,11 @@
 #
 # Table name: feed_fetch_attempts
 #
-#  id         :integer          not null, primary key
+#  id         :bigint           not null, primary key
 #  perform_at :datetime         not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  feed_id    :integer          not null
+#  feed_id    :bigint           not null
 #
 # Indexes
 #
@@ -16,7 +16,7 @@
 #
 # Foreign Keys
 #
-#  feed_id  (feed_id => feeds.id)
+#  fk_rails_...  (feed_id => feeds.id)
 #
 class FeedFetchAttempt < ApplicationRecord
   belongs_to :feed

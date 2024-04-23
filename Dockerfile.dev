@@ -1,0 +1,15 @@
+ARG RUBY_VERSION=3.2.2
+FROM ruby:${RUBY_VERSION}-alpine as base
+
+WORKDIR /rails
+
+ENV BUNDLE_PATH="/usr/local/bundle"
+
+RUN apk update && \
+    apk add build-base curl gcompat vips libpq libpq-dev tzdata && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives \
+
+ENTRYPOINT ["/rails/bin/docker-entrypoint"]
+
+EXPOSE 3000
+CMD ./scripts/start.sh

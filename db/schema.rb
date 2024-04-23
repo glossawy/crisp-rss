@@ -11,8 +11,11 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.1].define(version: 2024_04_19_181509) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "feed_fetch_attempt_outcomes", force: :cascade do |t|
-    t.integer "feed_fetch_attempt_id", null: false
+    t.bigint "feed_fetch_attempt_id", null: false
     t.string "state"
     t.string "reason"
     t.datetime "created_at", null: false
@@ -21,15 +24,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_19_181509) do
   end
 
   create_table "feed_fetch_attempts", force: :cascade do |t|
-    t.integer "feed_id", null: false
-    t.datetime "perform_at", null: false
+    t.bigint "feed_id", null: false
+    t.datetime "perform_at", precision: nil, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["feed_id"], name: "index_feed_fetch_attempts_on_feed_id"
   end
 
   create_table "feeds", force: :cascade do |t|
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.string "url", null: false
     t.integer "interval", null: false
     t.datetime "created_at", null: false
@@ -38,11 +41,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_19_181509) do
   end
 
   create_table "user_sessions", force: :cascade do |t|
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.string "session_token", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "expires_at", null: false
+    t.datetime "expires_at", precision: nil, null: false
     t.index ["session_token"], name: "index_user_sessions_on_session_token", unique: true
     t.index ["user_id"], name: "index_user_sessions_on_user_id"
   end
@@ -53,7 +56,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_19_181509) do
     t.string "password_hash", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "deleted_at"
+    t.datetime "deleted_at", precision: nil
     t.index ["display_name"], name: "index_users_on_display_name", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["password_hash"], name: "index_users_on_password_hash"

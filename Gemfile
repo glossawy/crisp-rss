@@ -7,9 +7,6 @@ ruby '3.2.2'
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem 'rails', '~> 7.1.3', '>= 7.1.3.2'
 
-# Use sqlite3 as the database for Active Record
-gem 'sqlite3', '~> 1.4'
-
 # Use the Puma web server [https://github.com/puma/puma]
 gem 'puma', '>= 5.0'
 
@@ -28,8 +25,10 @@ gem 'rack-cors'
 gem 'acts_as_paranoid', '~> 0.9.0'
 gem 'argon2', '~> 2.3'
 gem 'feedjira', '~> 3.2'
+gem 'httpx', '~> 1.2'
 gem 'interactor', '~> 3.1'
 gem 'jwt', '~> 2.8'
+gem 'pg', '~> 1.5'
 gem 'request_store', '~> 1.6'
 gem 'validates_email_format_of', '~> 1.8'
 gem 'validate_url', '~> 1.0'

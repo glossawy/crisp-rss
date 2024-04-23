@@ -9,5 +9,8 @@ Rails.application.routes.draw do
 
   get '/sessions/check', to: 'sessions#check'
   get '/sessions/logout', to: 'sessions#logout'
+
   resources :sessions, only: %i[create]
+
+  resources :feeds, only: %i[index]
 end

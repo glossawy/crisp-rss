@@ -4,12 +4,12 @@
 #
 # Table name: feeds
 #
-#  id         :integer          not null, primary key
+#  id         :bigint           not null, primary key
 #  interval   :integer          not null
 #  url        :string           not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  user_id    :integer          not null
+#  user_id    :bigint           not null
 #
 # Indexes
 #
@@ -17,7 +17,7 @@
 #
 # Foreign Keys
 #
-#  user_id  (user_id => users.id)
+#  fk_rails_...  (user_id => users.id)
 #
 class Feed < ApplicationRecord
   belongs_to :user
