@@ -6,7 +6,7 @@ module Sessions
 
     SessionNotFound = Class.new(StandardError)
 
-    SessionInfo = Struct.new(:token, :expires_at)
+    SessionInfo = Struct.new(:user_id, :token, :expires_at)
 
     EXPIRES_IN = 1.day
 
@@ -26,7 +26,7 @@ module Sessions
         expires_at: EXPIRES_IN.from_now
       )
 
-      SessionInfo.new(session.session_token, session.expires_at)
+      SessionInfo.new(user.id, session.session_token, session.expires_at)
     end
 
     def revoke_session!(session_token)
@@ -34,7 +34,7 @@ module Sessions
 
       session.expire! if session.active?
 
-      SessionInfo.new(session.session_token, session.expires_at)
+      SessionInfo.new(user.id, session.session_token, session.expires_at)
     rescue ActiveRecord::NotFoundError
       raise SessionNotFound, 'Token does not match a session'
     end

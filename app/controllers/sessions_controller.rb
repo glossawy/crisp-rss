@@ -36,9 +36,9 @@ class SessionsController < AuthenticatedController
   private
 
   def prepare_access_token_headers!(session_info)
-    session_info in { token:, expires_at: }
+    session_info in { user_id:, token: session_token, expires_at: }
 
-    encoded = Sessions::Jwt.new({ session_token: token }).encode
+    encoded = Sessions::Jwt.new({ user_id:, session_token: }).encode
     response.headers['Access-Token'] = encoded.token
     response.headers['Expire-At'] = expires_at.iso8601
   end

@@ -7,8 +7,9 @@ export default function AuthRedirect({
 }: {
   children: React.ReactNode
 }) {
-  const { session } = useSession()
+  const { sessionId } = useSession()
 
-  if (session == null) return <Navigate to="/" />
+  console.debug(sessionId)
+  if (sessionId == null) return <Navigate to="/" />
   else return <>{children}</>
 }

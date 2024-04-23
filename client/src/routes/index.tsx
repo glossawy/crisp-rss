@@ -24,15 +24,15 @@ export const Route = createFileRoute('/')({
     }
   },
   component() {
-    const { session } = useSession()
+    const { sessionId } = useSession()
     const router = useRouter()
     const {
       location: { search },
     } = useRouterState()
 
-    if (session && search.redirect) {
+    if (sessionId && search.redirect) {
       router.history.push(search.redirect)
-    } else if (session) {
+    } else if (sessionId) {
       return <Navigate to="/home" startTransition />
     }
 

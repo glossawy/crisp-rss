@@ -9,7 +9,7 @@ import { fetchStoredData } from '@/lib/storage'
 import { StorageKeys } from '@/lib/storageKeys'
 import { bearerToken } from '@/services/utils'
 
-type AuthenticateParams = z.infer<typeof CreateSessionRequest>['user']
+export type AuthenticateParams = z.infer<typeof CreateSessionRequest>['user']
 
 export type SessionInfo = {
   jwt: string
@@ -32,16 +32,16 @@ export function isAuthenticated() {
 export async function logout(): Promise<boolean> {
   const session = fetchSessionInfo()
 
-  if (session) {
-    const response = await sessionsClient.expireSession.query({
-      headers: {
-        authorization: bearerToken(session.jwt),
-      },
-    })
+  if (!session) throw new Error('Attempted to log out with a session')
 
-    if ([200, 400].includes(response.status)) {
-      return true
-    }
+  const response = await sessionsClient.expireSession.query({
+    headers: {
+      authorization: bearerToken(session.jwt),
+    },
+  })
+
+  if ([200, 400].includes(response.status)) {
+    return true
   }
 
   return false

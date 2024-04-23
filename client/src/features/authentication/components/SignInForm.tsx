@@ -20,8 +20,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import useSession from '@/features/authentication/hooks/useSession'
-import { authenticate } from '@/features/authentication/lib/auth'
+import useAuth from '@/features/authentication/hooks/useAuth'
 
 const SignInSchema = z.object({
   email: z.string().email({ message: 'Not a valid email address' }),
@@ -31,7 +30,7 @@ const SignInSchema = z.object({
 type SignInData = z.infer<typeof SignInSchema>
 
 export default function SignInForm() {
-  const { setSession } = useSession()
+  const { login } = useAuth()
   const [showPassword, setShowPassword] = useState(false)
   const { isLoading } = useRouterState()
 
@@ -42,16 +41,6 @@ export default function SignInForm() {
     },
     disabled: isLoading,
   })
-
-  const onSubmit = async (credentials: SignInData) => {
-    const session = await authenticate(credentials)
-
-    if (session) {
-      setSession(session)
-    } else {
-      form.setError('root', { message: 'Email or password was incorrect' })
-    }
-  }
 
   const formError = form.formState.errors.root
 
@@ -66,7 +55,7 @@ export default function SignInForm() {
           </AlertDescription>
         </Alert>
       ) : null}
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
+      <form onSubmit={form.handleSubmit(login)} className="w-full space-y-6">
         <FormField
           control={form.control}
           name="email"

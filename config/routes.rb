@@ -11,6 +11,5 @@ Rails.application.routes.draw do
   get '/sessions/logout', to: 'sessions#logout'
 
   resources :sessions, only: %i[create]
-
-  resources :feeds, only: %i[index]
+  resources :users, only: %i[show]
 end

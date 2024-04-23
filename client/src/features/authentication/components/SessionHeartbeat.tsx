@@ -8,7 +8,7 @@ import useSession from '@/features/authentication/hooks/useSession'
 const HEARTBEAT_INTERVAL = import.meta.env.DEV ? 5 * 1000 : 60 * 1000
 
 export default function SessionHeartbeat() {
-  const { session, authHeader, setSession, clearSession } = useSession()
+  const { sessionId, authHeader, setExpiry, clearSession } = useSession()
   const { location } = useRouterState()
 
   useEffect(() => {
@@ -29,8 +29,7 @@ export default function SessionHeartbeat() {
         // Sign-out early if session expires soon or has expired
         if (differenceInMilliseconds(expiry, new Date()) < HEARTBEAT_INTERVAL)
           clearSession()
-        else if (session)
-          setSession({ ...session, expires_at: expiry.toISOString() })
+        else setExpiry(expiry)
       }
     }
 
@@ -38,7 +37,7 @@ export default function SessionHeartbeat() {
     return () => {
       clearInterval(interval)
     }
-  }, [location.pathname, session?.jwt])
+  }, [location.pathname, sessionId])
 
   return null
 }

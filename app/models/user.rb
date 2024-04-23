@@ -4,7 +4,7 @@
 #
 # Table name: users
 #
-#  id            :bigint           not null, primary key
+#  id            :uuid             not null, primary key
 #  deleted_at    :datetime
 #  display_name  :string           not null
 #  email         :string           not null
