@@ -10,9 +10,9 @@ import useFeeds from '@/features/feeds/hooks/useFeeds'
 import { navigationMenuTriggerStyle } from '@/lib/navigationMenuUtils'
 import { cn } from '@/lib/utils'
 
-type Props = { userId: string }
+type Props = { userId: string; selectedId?: number }
 
-export default function FeedSidebarList({ userId }: Props) {
+export default function FeedSidebarList({ userId, selectedId }: Props) {
   const { feeds, isFetching } = useFeeds(userId)
 
   if (isFetching) return <div>Loading...</div>
@@ -27,13 +27,19 @@ export default function FeedSidebarList({ userId }: Props) {
           feeds.map((feed) => (
             <NavigationMenuItem className="min-w-full !ml-0">
               <NavigationMenuLink
+                active={feed.id === selectedId}
                 className={cn(
                   navigationMenuTriggerStyle(),
                   'min-w-full justify-start rounded-none border-1 box-border',
                 )}
                 asChild
               >
-                <Link>{feed.title}</Link>
+                <Link
+                  to="/feeds/$feedId"
+                  params={{ feedId: feed.id.toString() }}
+                >
+                  {feed.title}
+                </Link>
               </NavigationMenuLink>
             </NavigationMenuItem>
           ))}

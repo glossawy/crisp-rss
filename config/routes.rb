@@ -12,6 +12,6 @@ Rails.application.routes.draw do
 
   resources :sessions, only: %i[create]
   resources :users, only: %i[show] do
-    resources :feeds, module: :users, only: %i[index]
+    resources :feeds, module: :users, only: %i[show index]
   end
 end

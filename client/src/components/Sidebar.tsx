@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router'
+import { Link, useParams } from '@tanstack/react-router'
 
 import { Title } from '@/components/ui/typography'
 import useSession from '@/features/authentication/hooks/useSession'
@@ -6,6 +6,15 @@ import FeedSidebarList from '@/features/feeds/components/FeedSidebarList'
 
 export default function Sidebar() {
   const { userId } = useSession()
+  const { feedId } = useParams({
+    strict: false,
+    select(params) {
+      return 'feedId' in params ? { feedId: params.feedId } : {}
+    },
+  })
+
+  const selectedId =
+    feedId == null || feedId === '' ? undefined : parseInt(feedId)
 
   return (
     <div className="min-w-full">
@@ -15,7 +24,7 @@ export default function Sidebar() {
         </Link>
         <Title level={6}>Your Feeds</Title>
       </div>
-      {userId && <FeedSidebarList userId={userId} />}
+      {userId && <FeedSidebarList userId={userId} selectedId={selectedId} />}
     </div>
   )
 }

@@ -15,22 +15,24 @@ export const Route = createFileRoute('/_auth')({
   beforeLoad({ location }) {
     redirectWhenUnauthenticated(location)
   },
-  component: () => (
-    <AuthRedirect>
-      <div className="h-full flex flex-col">
-        <Affix>
-          <CurrentUserPill className="absolute top-5 right-5" />
-        </Affix>
-        <ResizablePanelGroup className="flex-grow" direction="horizontal">
-          <ResizablePanel defaultSize={15} minSize={10} maxSize={25}>
-            <Sidebar />
-          </ResizablePanel>
-          <ResizableHandle />
-          <ResizablePanel defaultSize={90}>
-            <Outlet />
-          </ResizablePanel>
-        </ResizablePanelGroup>
-      </div>
-    </AuthRedirect>
-  ),
+  component: () => {
+    return (
+      <AuthRedirect>
+        <div className="h-full flex flex-col">
+          <Affix>
+            <CurrentUserPill className="absolute top-5 right-5" />
+          </Affix>
+          <ResizablePanelGroup className="flex-grow" direction="horizontal">
+            <ResizablePanel defaultSize={15} minSize={10} maxSize={25}>
+              <Sidebar />
+            </ResizablePanel>
+            <ResizableHandle />
+            <ResizablePanel defaultSize={90}>
+              <Outlet />
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        </div>
+      </AuthRedirect>
+    )
+  },
 })

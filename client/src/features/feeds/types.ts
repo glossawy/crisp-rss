@@ -1,6 +1,7 @@
 export type FeedError = 'unsupported' | 'unreachable'
 
 export type FeedInfo = {
+  id: number
   error: FeedError | null
   source_url: string
   site_url: string
@@ -8,8 +9,22 @@ export type FeedInfo = {
   description: string | null
   entry_count: number
 
+  ttl: number
+
+  next_fetch_at: string
   last_fetched_at: string
   last_updated_at: string
 }
 
-export type FetchFeedsResponse = { feeds: FeedInfo[] }
+export type FeedEntry = {
+  guid: string
+  authors: string[]
+  url: string
+  summary: string | null
+  content: string | null
+}
+
+export type FeedDetail = FeedInfo & { entries: FeedEntry[] }
+
+export type GetAllFeedsResponse = { feeds: FeedInfo[] }
+export type GetFeedResponse = FeedDetail

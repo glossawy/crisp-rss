@@ -2,28 +2,29 @@ import useSession from '@/features/authentication/hooks/useSession'
 import { feedsClient } from '@/features/feeds/api'
 import { QueryKeys } from '@/services/queryKeys'
 
-export default function useFeeds(userId: string) {
+export default function useFeed(userId: string, feedId: number) {
   const { authHeader } = useSession()
 
   const {
-    data: feeds,
+    data: feed,
     error,
-    isFetching,
-  } = feedsClient.getAllFeeds.useQuery(
-    QueryKeys.feeds.fetchAll(userId),
+    isLoading,
+  } = feedsClient.getFeed.useQuery(
+    QueryKeys.feeds.fetchOne(userId, feedId),
     {
       headers: {
         authorization: authHeader,
       },
       params: {
         userId,
+        id: feedId,
       },
     },
     {
-      queryKey: QueryKeys.feeds.fetchAll(userId),
-      select: (data) => data.body.feeds,
+      queryKey: QueryKeys.feeds.fetchOne(userId, feedId),
+      select: (data) => data.body,
     },
   )
 
-  return { feeds, error, isFetching }
+  return { feed, error, isLoading }
 }

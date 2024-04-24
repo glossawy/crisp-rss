@@ -1,8 +1,6 @@
 class FetchFeeds
   include Interactor
 
-
-
   before do
     if context.user_id
       context.user = User.find_by(id: context.user_id)
@@ -13,6 +11,9 @@ class FetchFeeds
   end
 
   def call
-    context.feeds = context.user.feeds.to_a
+    feeds = context.user.feeds
+    feeds = feeds.where(id: context.feed_ids) if context.feed_ids.present?
+
+    context.feeds = feeds.to_a
   end
 end
