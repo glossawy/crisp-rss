@@ -26,7 +26,9 @@ class Feed < ApplicationRecord
   belongs_to :user
 
   scope :needs_refresh, lambda {
-    where(%{last_fetched_at + (interval || ' minutes')::interval <= NOW()})
+    where(%{last_fetched_at + (interval || ' minutes')::interval <= NOW()}).or(
+      where(last_fetched_at: nil),
+    )
   }
 
   validates :url, presence: true, url: { no_local: true }

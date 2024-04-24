@@ -16,7 +16,7 @@ module Rss
                to: :root
 
       def entries
-        entries.map { |entry| Entry.new(entry) }
+        root.entries.map { |entry| Entry.new(entry) }
       end
 
       Entry = Struct.new(:entry) do

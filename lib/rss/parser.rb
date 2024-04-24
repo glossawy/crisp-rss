@@ -22,11 +22,7 @@ module Rss
     private
 
     def parsed
-      @parsed ||= Feedjira.parse(xml)
-    end
-
-    def data_url
-      "data:application/rss+xml;base64,#{Base64.encode64(xml)}"
+      @parsed ||= Feedjira.parse(feed_xml)
     end
   end
 end
