@@ -8,6 +8,14 @@ class RefreshFeedJob < ApplicationJob
   )
 
   def perform(feed_id)
-    RefreshFeed.call(feed_id:)
+    result = RefreshFeed.call(feed_id:)
+
+    return if result.success?
+
+    Rails.logger.info(
+      "Failed to refresh feed #{feed_id}, #{result.reason}",
+    )
+
+    raise result.error
   end
 end
