@@ -18,14 +18,32 @@ class RefreshFeed
   def update_feed!
     new_content = Rss::Fetcher.new(context.feed.url).feed_xml
 
+    # Validate content is parseable
+    Rss::Parser.new(new_content).parse!
+
     context.feed.update!(
       content: new_content,
       last_fetched_at: Time.current,
     )
-  rescue HTTPX::Error => e
+  rescue Rss::Parser::PresenterMissing, Feedjira::NoParserAvailable
+    error! :unsupported
+  rescue HTTPX::Error
+    error! :unreachable
+  end
+
+  def succeed!(content)
     context.feed.update!(
-      error: "Failed to fetch: #{e.message}",
-      last_fetched_at: time.current,
+      content:,
+      last_fetched_at: Time.current,
     )
+  end
+
+  def error!(reason)
+    context.feed.update!(
+      error: reason,
+      last_fetched_at: Time.current,
+    )
+
+    context.fail!(reason:, error: $ERROR_INFO)
   end
 end

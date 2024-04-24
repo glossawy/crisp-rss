@@ -1,22 +1,14 @@
 module Rss
-  class Feed
-    attr_reader :provider
+  class Parser
+    attr_reader :feed_xml
 
     PresenterMissing = Class.new(StandardError)
 
-    def initialize(provider)
-      @provider = provider
+    def initialize(feed_xml)
+      @feed_xml = feed_xml
     end
 
-    def source_url
-      presenter.feed_url ||
-        provider.try(:feed_url) ||
-        data_url
-    end
-
-    def xml = provider.feed_xml
-
-    def presenter
+    def parse!
       case parsed
       when Feedjira::Parser::RSS
         Rss::Presenters::Rss.new(parsed)
@@ -27,11 +19,11 @@ module Rss
       end
     end
 
+    private
+
     def parsed
       @parsed ||= Feedjira.parse(xml)
     end
-
-    private
 
     def data_url
       "data:application/rss+xml;base64,#{Base64.encode64(xml)}"

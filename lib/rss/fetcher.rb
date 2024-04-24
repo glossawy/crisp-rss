@@ -13,12 +13,19 @@ module Rss
     private
 
     def response
-      @response ||= HTTPX.plugin(:follow_redirects).get(
+      @response ||= fetch!.tap do |resp|
+        Rails.logger.info("Fetch for #{url} returned a #{resp.status}")
+        resp.raise_for_status
+      end
+    end
+
+    def fetch!
+      HTTPX.plugin(:follow_redirects).get(
         url,
         headers: {
           'Accept' => 'application/rss+xml,application/atom+xml,application/xml,text/xml',
           'User-Agent' => 'CrispRSS/1.0',
-        }
+        },
       )
     end
   end
