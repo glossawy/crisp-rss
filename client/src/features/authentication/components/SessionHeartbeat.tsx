@@ -1,4 +1,3 @@
-import { useRouterState } from '@tanstack/react-router'
 import { differenceInMilliseconds, parseISO } from 'date-fns'
 import { useEffect } from 'react'
 
@@ -8,12 +7,9 @@ import useSession from '@/features/authentication/hooks/useSession'
 const HEARTBEAT_INTERVAL = import.meta.env.DEV ? 5 * 1000 : 60 * 1000
 
 export default function SessionHeartbeat() {
-  const { sessionId, authHeader, setExpiry, clearSession } = useSession()
-  const { location } = useRouterState()
+  const { authHeader, setExpiry, clearSession } = useSession()
 
   useEffect(() => {
-    if (['', '/'].includes(location.pathname)) return
-
     const checkSession = async () => {
       const response = await sessionsClient.checkSession.query({
         headers: {
@@ -37,7 +33,7 @@ export default function SessionHeartbeat() {
     return () => {
       clearInterval(interval)
     }
-  }, [location.pathname, sessionId])
+  }, [])
 
   return null
 }

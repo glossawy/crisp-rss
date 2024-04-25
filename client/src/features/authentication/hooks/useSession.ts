@@ -1,3 +1,4 @@
+import { parseISO } from 'date-fns'
 import * as jose from 'jose'
 import { useCallback } from 'react'
 
@@ -37,6 +38,7 @@ export default function useSession() {
   return {
     sessionId: data?.session_token || null,
     userId: data?.user_id || null,
+    expiry: session == null ? null : parseISO(session.expires_at),
     authHeader,
     setExpiry,
     setSession: setStoredValue,

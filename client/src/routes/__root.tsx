@@ -19,7 +19,6 @@ export const Route = createRootRoute({
         <Suspense>
           <TanStackRouterDevtools />
         </Suspense>
-        <SessionHeartbeat />
       </>
     )
   },
