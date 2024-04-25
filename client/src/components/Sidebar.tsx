@@ -1,6 +1,8 @@
-import { AppShell, Space, Title } from '@mantine/core'
+import { AppShell, Button, Group, Space, Title } from '@mantine/core'
+import { IconPlus } from '@tabler/icons-react'
 import { useParams } from '@tanstack/react-router'
 
+import AnchorLink from '@/components/AnchorLink'
 import useSession from '@/features/authentication/hooks/useSession'
 import FeedSidebarList from '@/features/feeds/components/FeedSidebarList'
 
@@ -19,7 +21,19 @@ export default function Sidebar() {
   return (
     <AppShell.Navbar>
       <AppShell.Section px="sm" pt="sm">
-        <Title order={6}> Your Feeds</Title>
+        <Group>
+          <Title order={6}> Your Feeds</Title>
+          <AnchorLink to="/feeds/new">
+            <Button
+              variant="outline"
+              radius="xl"
+              size="xs"
+              rightSection={<IconPlus size={16} />}
+            >
+              Add New
+            </Button>
+          </AnchorLink>
+        </Group>
       </AppShell.Section>
       <Space h="sm" />
       <AppShell.Section>
