@@ -1,0 +1,22 @@
+.root {
+  height: 100%;
+  width: 100%;
+}
+
+.home {
+  color: var(--mantine-color-orange-6) !important;
+}
+
+.rightside {
+  height: 100%;
+  margin-left: auto;
+}
+
+.userButton {
+  height: 100%;
+  min-width: 200px;
+}
+
+.userMenu {
+  min-width: 200px;
+}

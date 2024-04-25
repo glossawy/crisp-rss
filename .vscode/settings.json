@@ -14,4 +14,14 @@
   "eslint.workingDirectories": [
     "./client"
   ],
+  "emmet.includeLanguages": {
+    "postcss": "css",
+  },
+  "cssVariables.lookupFiles": [
+    "**/*.css",
+    "**/*.scss",
+    "**/*.sass",
+    "**/*.less",
+    "client/node_modules/@mantine/core/styles.css"
+  ]
 }

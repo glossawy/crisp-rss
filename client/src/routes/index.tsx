@@ -1,3 +1,4 @@
+import { Group } from '@mantine/core'
 import {
   Navigate,
   createFileRoute,
@@ -37,9 +38,9 @@ export const Route = createFileRoute('/')({
     }
 
     return (
-      <main className="w-screen h-screen bg-slate-100 flex flex-col items-center place-content-center">
+      <Group style={{ height: '100%', justifyContent: 'center' }}>
         <SignInCard />
-      </main>
+      </Group>
     )
   },
 })

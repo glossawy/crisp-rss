@@ -1,4 +1,5 @@
-import { Text, Title } from '@/components/ui/typography'
+import { Text, Title } from '@mantine/core'
+
 import useFeed from '@/features/feeds/hooks/useFeed'
 
 type Props = { userId: string; feedId: number }

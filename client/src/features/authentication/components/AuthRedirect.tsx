@@ -9,7 +9,6 @@ export default function AuthRedirect({
 }) {
   const { sessionId } = useSession()
 
-  console.debug(sessionId)
   if (sessionId == null) return <Navigate to="/" />
   else return <>{children}</>
 }

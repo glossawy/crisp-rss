@@ -1,7 +1,6 @@
 import { Outlet, createRootRoute } from '@tanstack/react-router'
 import React, { Suspense } from 'react'
 
-import { Toaster } from '@/components/ui/toaster'
 import SessionHeartbeat from '@/features/authentication/components/SessionHeartbeat'
 
 const TanStackRouterDevtools = import.meta.env.PROD
@@ -20,7 +19,6 @@ export const Route = createRootRoute({
         <Suspense>
           <TanStackRouterDevtools />
         </Suspense>
-        <Toaster />
         <SessionHeartbeat />
       </>
     )

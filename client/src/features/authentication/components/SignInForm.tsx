@@ -1,25 +1,23 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
-  ExclamationTriangleIcon,
-  EyeClosedIcon,
-  EyeOpenIcon,
-} from '@radix-ui/react-icons'
+  ActionIcon,
+  Alert,
+  Button,
+  Group,
+  PasswordInput,
+  Space,
+  TextInput,
+} from '@mantine/core'
+import { useToggle } from '@mantine/hooks'
+import {
+  IconExclamationCircle,
+  IconEye,
+  IconEyeClosed,
+} from '@tabler/icons-react'
 import { useRouterState } from '@tanstack/react-router'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 import useAuth from '@/features/authentication/hooks/useAuth'
 
 const SignInSchema = z.object({
@@ -31,7 +29,7 @@ type SignInData = z.infer<typeof SignInSchema>
 
 export default function SignInForm() {
   const { login } = useAuth()
-  const [showPassword, setShowPassword] = useState(false)
+  const [showPassword, toggleShowPassword] = useToggle([true, false])
   const { isLoading } = useRouterState()
 
   const form = useForm<SignInData>({
@@ -45,58 +43,64 @@ export default function SignInForm() {
   const formError = form.formState.errors.root
 
   return (
-    <Form {...form}>
+    <form onSubmit={form.handleSubmit(login)} className="w-full space-y-6">
       {formError ? (
-        <Alert variant="destructive">
-          <ExclamationTriangleIcon />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>
-            {formError.message || 'An error occurred'}
-          </AlertDescription>
+        <Alert
+          variant="light"
+          color="red"
+          title="Error"
+          icon={<IconExclamationCircle />}
+        >
+          {formError.message || 'An error occurred'}
         </Alert>
       ) : null}
-      <form onSubmit={form.handleSubmit(login)} className="w-full space-y-6">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>{' '}
-              <FormControl>
-                <Input placeholder="user@example.com" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
 
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="flex flex-row">
-                <span className="place-content-center">Password</span>
-                <Button
-                  type="button"
-                  variant="icon"
-                  size="icon"
-                  className="ml-2 h-5 w-5"
-                  onClick={() => setShowPassword(!showPassword)}
-                  title={showPassword ? 'Hide password' : 'Show password'}
-                >
-                  {showPassword ? <EyeOpenIcon /> : <EyeClosedIcon />}
-                </Button>
-              </FormLabel>
-              <FormControl>
-                <Input type={showPassword ? 'text' : 'password'} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Submit</Button>
-      </form>
-    </Form>
+      <Controller
+        control={form.control}
+        name="email"
+        render={({ field, fieldState }) => (
+          <TextInput
+            label="Email"
+            placeholder="user@example.com"
+            type="email"
+            error={fieldState.error?.message}
+            {...field}
+          />
+        )}
+      />
+
+      <Space h="lg" />
+
+      <Controller
+        control={form.control}
+        name="password"
+        render={({ field, fieldState: { error } }) => (
+          <PasswordInput
+            label="Password"
+            error={error?.message}
+            {...field}
+            rightSection={
+              <ActionIcon
+                variant="subtle"
+                color="gray"
+                tabIndex={-1}
+                onMouseDown={(evt) => {
+                  evt.preventDefault()
+                  toggleShowPassword()
+                }}
+              >
+                {showPassword ? <IconEye /> : <IconEyeClosed />}
+              </ActionIcon>
+            }
+          />
+        )}
+      />
+      <Space h="md" />
+      <Group justify="end">
+        <Button variant="subtle" type="submit">
+          Submit
+        </Button>
+      </Group>
+    </form>
   )
 }
