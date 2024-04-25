@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module Sessions
   class Jwt
-    ALGORITHM = 'hs512'.freeze
+    ALGORITHM = 'hs512'
     KEYGEN = [ENV.fetch('CRISPRSS_JWT_SALT'), 512].freeze
 
     def self.secret

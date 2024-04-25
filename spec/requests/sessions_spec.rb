@@ -50,7 +50,7 @@ RSpec.describe 'Sessions' do
     end
 
     context 'with an auth token' do
-      let(:session) { create :user_session }
+      let(:session) { create(:user_session) }
 
       it 'returns a 200' do
         auth_get(sessions_logout_path, session:)
@@ -104,7 +104,7 @@ RSpec.describe 'Sessions' do
 
         expect(decoded.payload).to eq(
           session_token: user.sessions.last.session_token,
-          user_id: user.id
+          user_id: user.id,
         )
       end
     end

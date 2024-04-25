@@ -5,7 +5,7 @@ RSpec::Matchers.define :match_password do |plaintext|
     Argon2::Password.verify_password(
       plaintext,
       hashed,
-      secret || SecuredWithArgon2.argon2_secret
+      secret || SecuredWithArgon2.argon2_secret,
     )
   end
 

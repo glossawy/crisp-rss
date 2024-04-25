@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UsersController < AuthenticatedController
   before_action :fetch_user!, only: %i[show]
 

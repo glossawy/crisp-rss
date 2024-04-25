@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ScheduleRefreshesJob < ApplicationJob
   def perform
     Feed.needs_refresh.in_batches do |feed_relation|

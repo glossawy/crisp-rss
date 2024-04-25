@@ -1,10 +1,13 @@
+# frozen_string_literal: true
+
 class RefreshFeed
   include Interactor
+  include IdentifyModel
+
+  identify Feed, :feed
 
   def call
-    Feed.transaction do
-      context.feed = Feed.lock.find(context.feed_id)
-
+    context.feed.with_lock do
       update_feed! if due_for_refresh?
     end
   end
@@ -40,7 +43,7 @@ class RefreshFeed
 
   def error!(reason)
     context.feed.update!(
-      error: reason,
+      error_message: reason,
       last_fetched_at: Time.current,
     )
 

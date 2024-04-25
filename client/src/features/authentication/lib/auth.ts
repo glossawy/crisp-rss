@@ -29,6 +29,14 @@ export function isAuthenticated() {
   return !isPast(expiry)
 }
 
+export function getAuthHeader(): string {
+  const session = fetchSessionInfo()
+
+  const jwt = session == null ? '' : session.jwt
+
+  return `Bearer ${jwt}`
+}
+
 export async function logout(): Promise<boolean> {
   const session = fetchSessionInfo()
 

@@ -3,17 +3,18 @@ import { useEffect } from 'react'
 
 import { sessionsClient } from '@/features/authentication/api'
 import useSession from '@/features/authentication/hooks/useSession'
+import { getAuthHeader } from '@/features/authentication/lib/auth'
 
 const HEARTBEAT_INTERVAL = import.meta.env.DEV ? 5 * 1000 : 60 * 1000
 
 export default function SessionHeartbeat() {
-  const { authHeader, setExpiry, clearSession } = useSession()
+  const { setExpiry, clearSession } = useSession()
 
   useEffect(() => {
     const checkSession = async () => {
       const response = await sessionsClient.checkSession.query({
         headers: {
-          authorization: authHeader,
+          authorization: getAuthHeader(),
         },
       })
 

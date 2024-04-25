@@ -23,7 +23,7 @@ module Sessions
     def create_new_session!
       session = sessions.create!(
         session_token: Sessions::Token.generate_token_value,
-        expires_at: EXPIRES_IN.from_now
+        expires_at: EXPIRES_IN.from_now,
       )
 
       SessionInfo.new(user.id, session.session_token, session.expires_at)

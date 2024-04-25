@@ -36,6 +36,9 @@ Style/Documentation:
 Metrics/BlockLength:
   Enabled: false
 
+Metrics/MethodLength:
+  Enabled: false
+
 Rails/I18nLocaleTexts:
   Enabled: false
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Rss
   class Parser
     attr_reader :feed_xml

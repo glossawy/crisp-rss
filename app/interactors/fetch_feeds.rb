@@ -1,14 +1,10 @@
+# frozen_string_literal: true
+
 class FetchFeeds
   include Interactor
+  include IdentifyModel
 
-  before do
-    if context.user_id
-      context.user = User.find_by(id: context.user_id)
-      context.fail!(reason: 'User not found') if context.user.blank?
-    end
-
-    context.fail!(reason: 'User must be provided') if context.user.blank?
-  end
+  identify User, :user
 
   def call
     feeds = context.user.feeds

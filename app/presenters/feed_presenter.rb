@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FeedPresenter
   attr_reader :feed
 

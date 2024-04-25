@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.id feed.id
 json.error feed.error
 json.source_url feed.source_url

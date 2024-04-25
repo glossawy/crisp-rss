@@ -28,7 +28,7 @@ module SecuredWithArgon2
   def argon2_profile = SecuredWithArgon2.argon2_profile
 
   class_methods do
-    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     def secured_with_argon2!(password_attr = :password)
       attr_reader password_attr
       attr_accessor :"#{password_attr}_confirmation", :"#{password_attr}_challenge"
@@ -42,7 +42,7 @@ module SecuredWithArgon2
           hashed = Argon2::Password.create(plaintext, {
                                              profile: argon2_profile,
                                              secret: argon2_secret,
-                                           })
+                                           },)
           public_send(:"#{password_attr}_hash=", hashed)
         end
       end
@@ -68,7 +68,7 @@ module SecuredWithArgon2
           end
           if hash_was.blank? ||
              !Argon2::Password.verify_password(
-               challenge, hash_was, argon2_secret
+               challenge, hash_was, argon2_secret,
              )
             record.errors.add(:"#{password_attr}_challenge")
           end

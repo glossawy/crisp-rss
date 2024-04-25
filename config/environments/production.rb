@@ -68,7 +68,6 @@ Rails.application.configure do
       :memory_store
     end
 
-
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter = :resque
   # config.active_job.queue_name_prefix = "crisp_rss_production"

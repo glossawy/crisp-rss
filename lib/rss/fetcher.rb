@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Rss
   class Fetcher
     attr_reader :url
@@ -14,7 +16,7 @@ module Rss
 
     def response
       @response ||= fetch!.tap do |resp|
-        Rails.logger.info("Fetch for #{url} returned a #{resp.status}")
+        Rails.logger.info("Fetch for #{url} returned a #{resp.try(:status) || 'error'}")
         resp.raise_for_status
       end
     end

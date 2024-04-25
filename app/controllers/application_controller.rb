@@ -4,6 +4,7 @@ class ApplicationController < ActionController::API
   include ActionController::Cookies
   include ActionController::MimeResponds
 
+  include JSendResponses
   include CurrentUser
 
   def bearer_token

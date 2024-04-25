@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Rss
   module Presenters
     class Atom
@@ -20,7 +22,6 @@ module Rss
       end
 
       Entry = Struct.new(:entry) do
-
         def authors
           Array.wrap(entry.author.presence)
         end

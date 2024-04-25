@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FeedEntryPresenter
   attr_reader :entry
 

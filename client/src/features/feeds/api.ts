@@ -1,11 +1,20 @@
 import { initContract } from '@ts-rest/core'
 import { z } from 'zod'
 
-import { GetAllFeedsResponse, GetFeedResponse } from '@/features/feeds/types'
+import {
+  FeedInfo,
+  GetAllFeedsResponse,
+  GetFeedResponse,
+} from '@/features/feeds/types'
 import createClient from '@/services/createClient'
-import { MessageResponse } from '@/services/types'
+import { JSendFail, JSendSuccess, MessageResponse } from '@/services/types'
 
 const c = initContract()
+
+export const CreateFeedPayload = z.object({
+  url: z.string().url(),
+  interval: z.number().int().min(30),
+})
 
 const contract = c.router(
   {
@@ -31,6 +40,20 @@ const contract = c.router(
         200: c.type<GetFeedResponse>(),
         404: c.type<MessageResponse>(),
         400: c.type<MessageResponse>(),
+      },
+    },
+    createFeed: {
+      method: 'POST',
+      path: '/users/:userId/feeds',
+      pathParams: z.object({
+        userId: z.string(),
+      }),
+      body: z.object({
+        feed: CreateFeedPayload,
+      }),
+      responses: {
+        201: c.type<JSendSuccess<FeedInfo>>(),
+        422: c.type<JSendFail<z.infer<typeof CreateFeedPayload>>>(),
       },
     },
   },
