@@ -15,6 +15,7 @@ import {
   IconEyeClosed,
 } from '@tabler/icons-react'
 import { useRouterState } from '@tanstack/react-router'
+import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -22,7 +23,7 @@ import useAuth from '@/features/authentication/hooks/useAuth'
 
 const SignInSchema = z.object({
   email: z.string().email({ message: 'Not a valid email address' }),
-  password: z.string(),
+  password: z.string().min(1),
 })
 
 type SignInData = z.infer<typeof SignInSchema>
@@ -30,31 +31,26 @@ type SignInData = z.infer<typeof SignInSchema>
 export default function SignInForm() {
   const { login } = useAuth()
   const [showPassword, toggleShowPassword] = useToggle([true, false])
+  const [error, setError] = useState<string | null>(null)
   const { isLoading } = useRouterState()
 
   const form = useForm<SignInData>({
     resolver: zodResolver(SignInSchema),
-    defaultValues: {
-      email: '',
-    },
     disabled: isLoading,
   })
+  const { isSubmitting, isValid } = form.formState
 
-  const formError = form.formState.errors.root
+  const onSubmit = async (formValues: SignInData) => {
+    const signedIn = await login(formValues)
+
+    setError(signedIn ? null : 'Email or password is incorrect')
+  }
 
   return (
-    <form onSubmit={form.handleSubmit(login)} className="w-full space-y-6">
-      {formError ? (
-        <Alert
-          variant="light"
-          color="red"
-          title="Error"
-          icon={<IconExclamationCircle />}
-        >
-          {formError.message || 'An error occurred'}
-        </Alert>
-      ) : null}
-
+    <form
+      onSubmit={form.handleSubmit(onSubmit)}
+      onChange={() => setError(null)}
+    >
       <Controller
         control={form.control}
         name="email"
@@ -97,7 +93,22 @@ export default function SignInForm() {
       />
       <Space h="md" />
       <Group justify="end">
-        <Button variant="subtle" type="submit">
+        {error ? (
+          <Alert
+            variant="transparent"
+            color="red"
+            flex={1}
+            p={0}
+            title={error}
+            icon={<IconExclamationCircle />}
+          />
+        ) : null}
+        <Button
+          variant="subtle"
+          type="submit"
+          loading={isLoading}
+          disabled={isSubmitting || !isValid}
+        >
           Submit
         </Button>
       </Group>

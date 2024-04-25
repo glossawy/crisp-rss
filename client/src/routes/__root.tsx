@@ -1,8 +1,6 @@
 import { Outlet, createRootRoute } from '@tanstack/react-router'
 import React, { Suspense } from 'react'
 
-import SessionHeartbeat from '@/features/authentication/components/SessionHeartbeat'
-
 const TanStackRouterDevtools = import.meta.env.PROD
   ? () => null
   : React.lazy(() =>
