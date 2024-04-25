@@ -1,9 +1,9 @@
 import { initContract } from '@ts-rest/core'
 import { z } from 'zod'
 
-import { GetUserResponse } from '@/features/users/types'
+import { User } from '@/features/users/types'
 import createClient from '@/services/createClient'
-import { MessageResponse } from '@/services/types'
+import { JSendError, JSendFail, JSendSuccess } from '@/services/types'
 
 const c = initContract()
 
@@ -17,8 +17,8 @@ const contract = c.router(
         id: z.string(),
       }),
       responses: {
-        200: c.type<GetUserResponse>(),
-        404: c.type<MessageResponse>(),
+        200: c.type<JSendSuccess<{ user: User }>>(),
+        404: c.type<JSendFail<'id'>>(),
       },
     },
   },
@@ -27,7 +27,7 @@ const contract = c.router(
       authorization: z.string(),
     }),
     commonResponses: {
-      401: c.type<MessageResponse>(),
+      401: c.type<JSendError>(),
     },
     strictStatusCodes: true,
   },

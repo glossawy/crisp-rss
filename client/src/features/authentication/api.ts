@@ -1,12 +1,9 @@
 import { initContract } from '@ts-rest/core'
 import { z } from 'zod'
 
-import {
-  CheckSessionResponse,
-  ExpireSessionResponse,
-} from '@/features/authentication/types'
+import { SessionResponse } from '@/features/authentication/types'
 import createClient from '@/services/createClient'
-import { MessageResponse } from '@/services/types'
+import { JSendError, JSendSuccess } from '@/services/types'
 
 const c = initContract()
 
@@ -24,8 +21,8 @@ export const contract = c.router(
       path: '/sessions',
       summary: 'Create a new session for a user',
       responses: {
-        201: c.type<MessageResponse>(),
-        400: c.type<MessageResponse>(),
+        201: c.noBody(),
+        400: c.type<JSendError>(),
       },
       body: CreateSessionRequest,
     },
@@ -34,7 +31,7 @@ export const contract = c.router(
       path: '/sessions/check',
       summary: 'Check the current user session',
       responses: {
-        200: c.type<CheckSessionResponse>(),
+        200: c.type<JSendSuccess<SessionResponse>>(),
       },
       headers: z.object({
         authorization: z.string(),
@@ -45,8 +42,8 @@ export const contract = c.router(
       path: '/sessions/logout',
       summary: 'Log out of the current user session',
       responses: {
-        200: c.type<ExpireSessionResponse>(),
-        400: c.type<MessageResponse>(),
+        200: c.type<JSendSuccess<SessionResponse>>(),
+        400: c.type<JSendError>(),
       },
       headers: z.object({
         authorization: z.string(),
@@ -55,7 +52,7 @@ export const contract = c.router(
   },
   {
     commonResponses: {
-      401: c.type<MessageResponse>(),
+      401: c.type<JSendError>(),
     },
     strictStatusCodes: true,
   },

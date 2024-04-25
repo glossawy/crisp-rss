@@ -51,7 +51,7 @@ export default function CreateFeedContextModal({
       const { body, status } = await mutateAsync(values)
 
       if (status === 201) {
-        onNewFeed(body.data)
+        onNewFeed(body.data.feed)
         queryClient.invalidateQueries({
           queryKey: QueryKeys.feeds.fetchAll(userId),
         })

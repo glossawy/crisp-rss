@@ -22,7 +22,7 @@ export default function useFeed(userId: string, feedId: number) {
     },
     {
       queryKey: QueryKeys.feeds.fetchOne(userId, feedId),
-      select: (data) => data.body,
+      select: (data) => data.body.data.feed,
     },
   )
 

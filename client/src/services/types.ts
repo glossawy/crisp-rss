@@ -1,15 +1,12 @@
-export type MessageResponse = {
-  message: string
-}
-
 export type JSendSuccess<Payload extends { [key: string]: unknown }> = {
   status: 'success'
   data: Payload
 }
 
-export type JSendFail<RequestPayload extends { [key: string]: unknown }> = {
+// eslint-disable-next-line
+export type JSendFail<RequestKeys extends keyof any> = {
   status: 'fail'
-  data: { [k in keyof RequestPayload]: string }
+  data: { [k in RequestKeys]: string }
 }
 
 export type JSendError = {

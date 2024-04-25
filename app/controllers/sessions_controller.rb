@@ -15,9 +15,9 @@ class SessionsController < AuthenticatedController
       prepare_access_token_headers!(result.session_info)
       head :created
     else
-      render status: :bad_request, json: {
-        message: 'Login failed',
-      }
+      render status: :bad_request, json: jsend_error(
+        'Login failed',
+      )
     end
   end
 
@@ -27,9 +27,9 @@ class SessionsController < AuthenticatedController
     if result.success?
       render locals: { session: result.session }
     else
-      render status: :bad_request, json: {
-        message: result.reason,
-      }
+      render status: :bad_request, json: jsend_error(
+        result.reason,
+      )
     end
   end
 

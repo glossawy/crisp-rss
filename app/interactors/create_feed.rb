@@ -21,7 +21,7 @@ class CreateFeed
   private
 
   def new_feed
-    @new_feed ||= context.user.create(
+    @new_feed ||= context.user.feeds.create(
       url: context.params[:url],
       interval: context.params[:interval],
     )

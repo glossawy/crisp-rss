@@ -23,9 +23,9 @@ module SessionAuthentication
   end
 
   def render_unauthenticated
-    render status: :unauthorized, json: {
-      message: 'Valid access token not provided with request',
-    }
+    render status: :unauthorized, json: jsend_error(
+      'Valid access token not provided with request',
+    )
   end
 
   def skip_authentication_actions

@@ -25,6 +25,3 @@ export type FeedEntry = {
 }
 
 export type FeedDetail = FeedInfo & { entries: FeedEntry[] }
-
-export type GetAllFeedsResponse = { feeds: FeedInfo[] }
-export type GetFeedResponse = FeedDetail

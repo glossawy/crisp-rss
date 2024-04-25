@@ -3,7 +3,3 @@ export type User = {
   display_name: string
   email: string
 }
-
-export type GetUserResponse = {
-  user: User
-}

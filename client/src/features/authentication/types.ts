@@ -1,5 +1,3 @@
-export type CheckSessionResponse = {
+export type SessionResponse = {
   expires_at: string
 }
-
-export type ExpireSessionResponse = CheckSessionResponse

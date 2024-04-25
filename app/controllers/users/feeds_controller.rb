@@ -10,9 +10,7 @@ module Users
       if result.success?
         render locals: { feeds: to_presenters(result.feeds) }
       else
-        render status: :bad_request, json: {
-          message: result.reason,
-        }
+        render status: :bad_request, json: jsend_error(result.reason)
       end
     end
 
@@ -25,9 +23,9 @@ module Users
       if result.success?
         render locals: { feed: to_presenter(result.feeds.first) }
       elsif result.feeds.empty?
-        render status: :not_found, json: {
-          message: 'Resource not found for user',
-        }
+        render status: :not_found, json: jsend_fail(
+          id: 'Not found for user',
+        )
       else
         render status: :bad_request, json: {
           message: result.reason,

@@ -1,13 +1,9 @@
 import { initContract } from '@ts-rest/core'
 import { z } from 'zod'
 
-import {
-  FeedInfo,
-  GetAllFeedsResponse,
-  GetFeedResponse,
-} from '@/features/feeds/types'
+import { FeedDetail, FeedInfo } from '@/features/feeds/types'
 import createClient from '@/services/createClient'
-import { JSendFail, JSendSuccess, MessageResponse } from '@/services/types'
+import { JSendError, JSendFail, JSendSuccess } from '@/services/types'
 
 const c = initContract()
 
@@ -25,8 +21,8 @@ const contract = c.router(
         userId: z.string(),
       }),
       responses: {
-        200: c.type<GetAllFeedsResponse>(),
-        400: c.type<MessageResponse>(),
+        200: c.type<JSendSuccess<{ feeds: FeedInfo[] }>>(),
+        400: c.type<JSendError>(),
       },
     },
     getFeed: {
@@ -37,9 +33,9 @@ const contract = c.router(
         id: z.coerce.number(),
       }),
       responses: {
-        200: c.type<GetFeedResponse>(),
-        404: c.type<MessageResponse>(),
-        400: c.type<MessageResponse>(),
+        200: c.type<JSendSuccess<{ feed: FeedDetail }>>(),
+        404: c.type<JSendFail<'id'>>(),
+        400: c.type<JSendError>(),
       },
     },
     createFeed: {
@@ -52,8 +48,8 @@ const contract = c.router(
         feed: CreateFeedPayload,
       }),
       responses: {
-        201: c.type<JSendSuccess<FeedInfo>>(),
-        422: c.type<JSendFail<z.infer<typeof CreateFeedPayload>>>(),
+        201: c.type<JSendSuccess<{ feed: FeedInfo }>>(),
+        422: c.type<JSendFail<keyof z.infer<typeof CreateFeedPayload>>>(),
       },
     },
   },
@@ -62,7 +58,7 @@ const contract = c.router(
       authorization: z.string(),
     }),
     commonResponses: {
-      401: c.type<MessageResponse>(),
+      401: c.type<JSendError>(),
     },
     strictStatusCodes: true,
   },

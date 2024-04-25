@@ -21,7 +21,7 @@ export default function useFeeds(userId: string) {
     },
     {
       queryKey: QueryKeys.feeds.fetchAll(userId),
-      select: (data) => data.body.feeds,
+      select: (data) => data.body.data.feeds,
     },
   )
 
