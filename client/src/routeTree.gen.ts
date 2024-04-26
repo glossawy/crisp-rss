@@ -15,6 +15,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as AuthImport } from './routes/_auth'
 import { Route as IndexImport } from './routes/index'
+import { Route as AuthHomeImport } from './routes/_auth/home'
 import { Route as AuthFeedsImport } from './routes/_auth/feeds'
 import { Route as AuthFeedsFeedIdIndexImport } from './routes/_auth/feeds/$feedId/index'
 import { Route as AuthFeedsFeedIdEditImport } from './routes/_auth/feeds/$feedId/edit'
@@ -36,14 +37,19 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AuthHomeRoute = AuthHomeImport.update({
+  path: '/home',
+  getParentRoute: () => AuthRoute,
+} as any)
+
 const AuthFeedsRoute = AuthFeedsImport.update({
   path: '/feeds',
   getParentRoute: () => AuthRoute,
 } as any)
 
 const AuthHomeIndexLazyRoute = AuthHomeIndexLazyImport.update({
-  path: '/home/',
-  getParentRoute: () => AuthRoute,
+  path: '/',
+  getParentRoute: () => AuthHomeRoute,
 } as any).lazy(() =>
   import('./routes/_auth/home/index.lazy').then((d) => d.Route),
 )
@@ -81,13 +87,17 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthFeedsImport
       parentRoute: typeof AuthImport
     }
+    '/_auth/home': {
+      preLoaderRoute: typeof AuthHomeImport
+      parentRoute: typeof AuthImport
+    }
     '/_auth/feeds/$feedId': {
       preLoaderRoute: typeof AuthFeedsFeedIdLazyImport
       parentRoute: typeof AuthFeedsImport
     }
     '/_auth/home/': {
       preLoaderRoute: typeof AuthHomeIndexLazyImport
-      parentRoute: typeof AuthImport
+      parentRoute: typeof AuthHomeImport
     }
     '/_auth/feeds/$feedId/edit': {
       preLoaderRoute: typeof AuthFeedsFeedIdEditImport
@@ -111,7 +121,7 @@ export const routeTree = rootRoute.addChildren([
         AuthFeedsFeedIdIndexRoute,
       ]),
     ]),
-    AuthHomeIndexLazyRoute,
+    AuthHomeRoute.addChildren([AuthHomeIndexLazyRoute]),
   ]),
 ])
 

@@ -2,7 +2,9 @@
 
 module Users
   class FeedsController < AuthenticatedController
-    before_action :ensure_access!
+    include RestrictToCurrentUser
+
+    before_action :current_user_only!
 
     def index
       result = FetchFeeds.call(user_id: params.require(:user_id))
@@ -69,14 +71,6 @@ module Users
     end
 
     private
-
-    def ensure_access!
-      return if CurrentSession.session&.user_id == params.require(:user_id)
-
-      render status: :unauthorized, json: {
-        message: 'Not authorized to access this resource',
-      }
-    end
 
     def invalid_params(params, errors)
       params.keys.index_with { |key| errors[key]&.first }.compact

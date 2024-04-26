@@ -12,6 +12,9 @@ Rails.application.routes.draw do
 
   resources :sessions, only: %i[create]
   resources :users, only: %i[show] do
-    resources :feeds, module: :users, only: %i[show index create destroy]
+    resources :feeds, module: :users, only: %i[show index create destroy] do
+      get 'timeline', to: 'feeds#timeline', on: :collection
+    end
+    resources :timeline, module: :users, only: %i[index]
   end
 end

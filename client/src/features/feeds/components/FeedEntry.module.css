@@ -1,0 +1,13 @@
+.header {
+  cursor: pointer;
+  padding: var(--card-padding);
+}
+
+.headerFeedLink {
+  width: fit-content;
+}
+
+.headerOutLink {
+  display: flex !important;
+  margin-left: auto !important;
+}

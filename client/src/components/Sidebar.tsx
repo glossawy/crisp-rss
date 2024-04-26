@@ -1,10 +1,11 @@
 import { AppShell, Button, Group, Space, Title } from '@mantine/core'
 import { modals } from '@mantine/modals'
 import { notifications } from '@mantine/notifications'
-import { IconPlus } from '@tabler/icons-react'
+import { IconHome, IconPlus } from '@tabler/icons-react'
 import { useNavigate, useParams } from '@tanstack/react-router'
 import { useCallback } from 'react'
 
+import RoutableNavLink from '@/components/RoutableNavLink'
 import useSession from '@/features/authentication/hooks/useSession'
 import FeedSidebarList from '@/features/feeds/components/FeedSidebarList'
 
@@ -60,6 +61,14 @@ export default function Sidebar() {
       </AppShell.Section>
       <Space h="sm" />
       <AppShell.Section>
+        <RoutableNavLink
+          to="/home"
+          navLink={{
+            leftSection: <IconHome size={16} />,
+            label: 'Home',
+            active: selectedId == null,
+          }}
+        />
         {userId && <FeedSidebarList userId={userId} selectedId={selectedId} />}
       </AppShell.Section>
     </AppShell.Navbar>

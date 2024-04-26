@@ -10,4 +10,7 @@ export const queries = createQueryKeyStore({
       queryKey: [userId, feedId],
     }),
   },
+  timeline: {
+    forUser: (userId: string) => ({ queryKey: [userId] }),
+  },
 })
