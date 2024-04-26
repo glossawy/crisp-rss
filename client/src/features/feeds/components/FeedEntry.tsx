@@ -39,7 +39,7 @@ export default function FeedEntry({ entry, feed, expanded }: Props) {
     : null
 
   return (
-    <Card pb={0}>
+    <Card pb={0} withBorder>
       <Card.Section>
         <Group
           align="start"

@@ -8,7 +8,7 @@ import { router } from '@/router'
 
 export default function App() {
   return (
-    <MantineProvider defaultColorScheme="dark">
+    <MantineProvider defaultColorScheme="light">
       <ModalsProvider modals={modals}>
         <RouterProvider router={router} />
         <Notifications />
