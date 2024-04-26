@@ -10,9 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_23_220944) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_26_060834) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "entries", force: :cascade do |t|
+    t.bigint "feed_id"
+    t.string "guid", null: false
+    t.string "title"
+    t.string "summary"
+    t.binary "content"
+    t.string "url"
+    t.string "authors", default: [], null: false, array: true
+    t.datetime "published_at", precision: nil
+    t.datetime "modified_at", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["feed_id", "guid"], name: "index_entries_on_feed_id_and_guid", unique: true
+    t.index ["feed_id"], name: "index_entries_on_feed_id"
+  end
 
   create_table "feeds", force: :cascade do |t|
     t.uuid "user_id", null: false
@@ -23,6 +39,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_23_220944) do
     t.string "error_message"
     t.binary "content"
     t.datetime "last_fetched_at", precision: nil
+    t.string "title"
+    t.string "description"
+    t.string "site_url"
+    t.string "source_url"
+    t.datetime "last_modified_at", precision: nil
     t.index ["user_id"], name: "index_feeds_on_user_id"
   end
 

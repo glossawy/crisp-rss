@@ -4,15 +4,20 @@
 #
 # Table name: feeds
 #
-#  id              :bigint           not null, primary key
-#  content         :binary
-#  error_message   :string
-#  interval        :integer          not null
-#  last_fetched_at :datetime
-#  url             :string           not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  user_id         :uuid             not null
+#  id               :bigint           not null, primary key
+#  content          :binary
+#  description      :string
+#  error_message    :string
+#  interval         :integer          not null
+#  last_fetched_at  :datetime
+#  last_modified_at :datetime
+#  site_url         :string
+#  source_url       :string
+#  title            :string
+#  url              :string           not null
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  user_id          :uuid             not null
 #
 # Indexes
 #
@@ -24,6 +29,7 @@
 #
 class Feed < ApplicationRecord
   belongs_to :user
+  has_many :entries, dependent: :destroy
 
   scope :needs_refresh, lambda {
     where(%{last_fetched_at + (interval || ' minutes')::interval <= NOW()}).or(
