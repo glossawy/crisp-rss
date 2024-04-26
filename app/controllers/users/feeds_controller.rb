@@ -8,7 +8,8 @@ module Users
       result = FetchFeeds.call(user_id: params.require(:user_id))
 
       if result.success?
-        render locals: { feeds: to_presenters(result.feeds) }
+        presenters = to_presenters(result.feeds)
+        render locals: { feeds: presenters.sort_by(&:title) }
       else
         render status: :bad_request, json: jsend_error(result.reason)
       end
@@ -20,7 +21,7 @@ module Users
         feed_ids: [params.require(:id)],
       )
 
-      if result.success?
+      if result.success? && result.feeds.present?
         render locals: { feed: to_presenter(result.feeds.first) }
       elsif result.feeds.empty?
         render status: :not_found, json: jsend_fail(

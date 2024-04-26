@@ -15,5 +15,9 @@ class FeedEntryPresenter
     Array.wrap(entry.authors)
   end
 
-  delegate :url, :summary, :content, to: :entry
+  def content
+    Rails::HTML5::SafeListSanitizer.new(prune: true).sanitize(entry.content)
+  end
+
+  delegate :url, :summary, :title, :published_at, to: :entry
 end

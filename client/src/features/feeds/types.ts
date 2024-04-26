@@ -20,8 +20,11 @@ export type FeedEntry = {
   guid: string
   authors: string[]
   url: string
+  title: string | null
   summary: string | null
   content: string | null
+
+  published_at: string | null
 }
 
 export type FeedDetail = FeedInfo & { entries: FeedEntry[] }

@@ -22,7 +22,7 @@ export default function useUser(userId: string | null) {
     {
       queryKey: QueryKeys.user(userId!),
       enabled: userId != null,
-      select: (data) => data.body.user,
+      select: (data) => data.body.data.user,
     },
   )
 

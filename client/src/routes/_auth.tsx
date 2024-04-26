@@ -21,7 +21,7 @@ export const Route = createFileRoute('/_auth')({
           >
             <Header />
             <Sidebar />
-            <AppShell.Main>
+            <AppShell.Main display="flex" style={{ flexDirection: 'column' }}>
               <Outlet />
             </AppShell.Main>
           </AppShell>
