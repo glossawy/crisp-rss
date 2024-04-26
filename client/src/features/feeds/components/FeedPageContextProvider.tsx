@@ -3,6 +3,7 @@ import { notFound } from '@tanstack/react-router'
 import MainContentMessage from '@/components/MainContentMessage'
 import { FeedPageContext } from '@/features/feeds/contexts/FeedPageContext'
 import useFeed from '@/features/feeds/hooks/useFeed'
+import useAppTitle from '@/hooks/useAppTitle'
 
 type Props = React.PropsWithChildren<{ userId: string; feedId: number }>
 
@@ -12,6 +13,7 @@ export default function FeedPageContextProvider({
   children,
 }: Props) {
   const { feed, error, isLoading } = useFeed(userId!, feedId)
+  useAppTitle(feed?.title)
 
   if (error) {
     if (error.status === 404) throw notFound()

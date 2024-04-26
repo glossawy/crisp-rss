@@ -5,6 +5,7 @@ import MainContentMessage from '@/components/MainContentMessage'
 import useSession from '@/features/authentication/hooks/useSession'
 import FeedEntry from '@/features/feeds/components/FeedEntry'
 import useTimeline from '@/features/timeline/hooks/useTimeline'
+import useAppTitle from '@/hooks/useAppTitle'
 
 export const Route = createLazyFileRoute('/_auth/home/')({
   component: () => {
@@ -12,6 +13,8 @@ export const Route = createLazyFileRoute('/_auth/home/')({
     const userId = sessionData.userId!
 
     const { timeline, error, isLoading } = useTimeline(userId)
+
+    useAppTitle('Home Timeline')
 
     if (error) {
       if (error.status === 500 || error.status === 401)

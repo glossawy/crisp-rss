@@ -1,6 +1,8 @@
 import { Outlet, createRootRoute } from '@tanstack/react-router'
 import React, { Suspense } from 'react'
 
+import useAppTitle from '@/hooks/useAppTitle'
+
 const TanStackRouterDevtools = import.meta.env.PROD
   ? () => null
   : React.lazy(() =>
@@ -11,6 +13,8 @@ const TanStackRouterDevtools = import.meta.env.PROD
 
 export const Route = createRootRoute({
   component() {
+    useAppTitle()
+
     return (
       <>
         <Outlet />
