@@ -5,9 +5,17 @@
 
 .headerFeedLink {
   width: fit-content;
+
+  p {
+    font-weight: 700;
+  }
 }
 
 .headerOutLink {
   display: flex !important;
   margin-left: auto !important;
+
+  p {
+    font-weight: 500;
+  }
 }
