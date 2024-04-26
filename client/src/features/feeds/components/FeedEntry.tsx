@@ -52,7 +52,11 @@ export default function FeedEntry({ entry }: Props) {
       </Group>
       <Divider my="sm" />
       <Spoiler maxHeight={500} hideLabel={'Show less'} showLabel={'Show more'}>
-        <Container dangerouslySetInnerHTML={{ __html: entry.content || '' }} />
+        <Container
+          dangerouslySetInnerHTML={{
+            __html: entry.content || entry.summary || '',
+          }}
+        />
       </Spoiler>
     </Card>
   )
