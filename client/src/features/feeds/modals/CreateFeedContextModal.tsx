@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, NumberInput, Space, TextInput } from '@mantine/core'
+import { Button, Space, TextInput } from '@mantine/core'
 import { ContextModalProps } from '@mantine/modals'
 import { useMutation } from '@tanstack/react-query'
 import { useCallback } from 'react'
@@ -9,10 +9,26 @@ import { z } from 'zod'
 import { getAuthHeader } from '@/features/authentication/lib/auth'
 import { CreateFeedPayload, feedsClient } from '@/features/feeds/api'
 import { FeedInfo } from '@/features/feeds/types'
+import { parseDurationToMinutes } from '@/lib/utils'
 import { queryClient } from '@/services/queryClient'
-import { QueryKeys } from '@/services/queryKeys'
+import { queries } from '@/services/queryKeys'
 
-type FormValues = z.infer<typeof CreateFeedPayload>
+type FormValues = {
+  url: string
+  interval: string
+}
+
+const FormValuesSchema = z.object({
+  url: z.string().url(),
+  interval: z
+    .string()
+    .regex(/^\d+:\d\d:\d\d|\d+:\d\d|\d\d$/, {
+      message: 'Must be in dd:hh:mm format',
+    })
+    .refine((duration) => parseDurationToMinutes(duration) >= 30, {
+      message: 'Interval cannot be more frequent than 30 minutes',
+    }),
+})
 
 export default function CreateFeedContextModal({
   context,
@@ -23,10 +39,10 @@ export default function CreateFeedContextModal({
   onNewFeed: (feed: FeedInfo) => void
 }>) {
   const form = useForm<FormValues>({
-    resolver: zodResolver(CreateFeedPayload),
+    resolver: zodResolver(FormValuesSchema),
     defaultValues: {
       url: '',
-      interval: 30,
+      interval: '',
     },
   })
 
@@ -48,12 +64,15 @@ export default function CreateFeedContextModal({
 
   const onSubmit = useCallback(
     async (values: FormValues) => {
-      const { body, status } = await mutateAsync(values)
+      const { body, status } = await mutateAsync({
+        url: values.url,
+        interval: parseDurationToMinutes(values.interval),
+      })
 
       if (status === 201) {
         onNewFeed(body.data.feed)
         queryClient.invalidateQueries({
-          queryKey: QueryKeys.feeds.fetchAll(userId),
+          ...queries.feeds.all(userId),
         })
         context.closeContextModal(id)
       } else if (status === 401) {
@@ -87,9 +106,10 @@ export default function CreateFeedContextModal({
         control={form.control}
         name="interval"
         render={({ field, fieldState: { error } }) => (
-          <NumberInput
-            label="Refresh Interval (minutes)"
+          <TextInput
+            label="Refresh Interval"
             error={error?.message}
+            placeholder="dd:hh:mm"
             {...field}
             withAsterisk
           />

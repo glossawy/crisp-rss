@@ -52,6 +52,20 @@ const contract = c.router(
         422: c.type<JSendFail<keyof z.infer<typeof CreateFeedPayload>>>(),
       },
     },
+    unsubscribeFeed: {
+      method: 'DELETE',
+      path: '/users/:userId/feeds/:id',
+      pathParams: z.object({
+        userId: z.string(),
+        id: z.coerce.number(),
+      }),
+      body: c.noBody(),
+      responses: {
+        200: c.type<JSendSuccess<{ feed: FeedInfo }>>(),
+        404: c.type<JSendFail<keyof z.infer<typeof CreateFeedPayload>>>(),
+        500: c.type<JSendError>(),
+      },
+    },
   },
   {
     baseHeaders: z.object({

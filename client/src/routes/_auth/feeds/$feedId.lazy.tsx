@@ -1,12 +1,14 @@
+import { Stack } from '@mantine/core'
 import {
   CatchBoundary,
   CatchNotFound,
+  Outlet,
   createLazyFileRoute,
 } from '@tanstack/react-router'
 
-import MainContentError from '@/components/MainContentError'
+import MainContentMessage from '@/components/MainContentMessage'
 import useSession from '@/features/authentication/hooks/useSession'
-import Feed from '@/features/feeds/components/Feed'
+import FeedPageContextProvider from '@/features/feeds/components/FeedPageContextProvider'
 
 export const Route = createLazyFileRoute('/_auth/feeds/$feedId')({
   component: FeedPage,
@@ -18,21 +20,23 @@ function FeedPage() {
     select: ({ feedId }) => parseInt(feedId),
   })
 
-  if (!userId) return <div>You are not logged in</div>
-
   return (
     <CatchBoundary
       getResetKey={() => `${userId}:${feedId}`}
       errorComponent={() => (
-        <MainContentError message="Error occurred while loading feed" />
+        <MainContentMessage message="Error occurred while loading feed" />
       )}
     >
       <CatchNotFound
         fallback={(_error) => (
-          <MainContentError message="Failed to find feed" />
+          <MainContentMessage message="Failed to find feed" />
         )}
       >
-        <Feed userId={userId} feedId={feedId} />
+        <FeedPageContextProvider feedId={feedId} userId={userId!}>
+          <Stack pt="md" px="md">
+            <Outlet />
+          </Stack>
+        </FeedPageContextProvider>
       </CatchNotFound>
     </CatchBoundary>
   )

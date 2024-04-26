@@ -1,6 +1,6 @@
 import useSession from '@/features/authentication/hooks/useSession'
 import { usersClient } from '@/features/users/api'
-import { QueryKeys } from '@/services/queryKeys'
+import { queries } from '@/services/queryKeys'
 
 export default function useUser(userId: string | null) {
   const { authHeader } = useSession()
@@ -10,7 +10,7 @@ export default function useUser(userId: string | null) {
     error,
     isFetching,
   } = usersClient.getUser.useQuery(
-    QueryKeys.user(userId!),
+    queries.users.detail(userId!).queryKey,
     {
       headers: {
         authorization: authHeader,
@@ -20,7 +20,7 @@ export default function useUser(userId: string | null) {
       },
     },
     {
-      queryKey: QueryKeys.user(userId!),
+      ...queries.users.detail(userId!),
       enabled: userId != null,
       select: (data) => data.body.data.user,
     },

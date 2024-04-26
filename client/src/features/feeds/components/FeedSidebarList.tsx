@@ -4,9 +4,9 @@ import useFeeds from '@/features/feeds/hooks/useFeeds'
 type Props = { userId: string; selectedId?: number }
 
 export default function FeedSidebarList({ userId, selectedId }: Props) {
-  const { feeds, isFetching } = useFeeds(userId)
+  const { feeds, isLoading } = useFeeds(userId)
 
-  if (isFetching) return <div>Loading...</div>
+  if (isLoading) return <div>Loading...</div>
 
   return (
     <>

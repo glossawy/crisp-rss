@@ -51,6 +51,23 @@ module Users
       end
     end
 
+    def destroy
+      result = DeleteFeed.call(
+        user_id: params.require(:user_id),
+        feed_id: params.require(:id),
+      )
+
+      if result.success?
+        render locals: { feed: to_presenter(result.feed) }
+      elsif result.reason == :not_found
+        render status: :not_found, json: jsend_fail(
+          id: 'Not found for user',
+        )
+      else
+        render status: :internal_server_error, json: jsend_error(result.reason)
+      end
+    end
+
     private
 
     def ensure_access!

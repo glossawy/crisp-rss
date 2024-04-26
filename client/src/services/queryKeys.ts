@@ -1,12 +1,13 @@
-export const QueryKeys = {
-  user: (id: string) => ['user', id],
-  feeds: {
-    fetchAll: (userId: string) => ['user', userId, 'feeds'],
-    fetchOne: (userId: string, feedId: number) => [
-      'user',
-      userId,
-      'feeds',
-      feedId,
-    ],
+import { createQueryKeyStore } from '@lukemorales/query-key-factory'
+
+export const queries = createQueryKeyStore({
+  users: {
+    detail: (userId: string) => ({ queryKey: [userId] }),
   },
-} as const
+  feeds: {
+    all: (userId: string) => ({ queryKey: [userId] }),
+    detail: (userId: string, feedId: number) => ({
+      queryKey: [userId, feedId],
+    }),
+  },
+})
