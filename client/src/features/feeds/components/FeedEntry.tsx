@@ -4,6 +4,7 @@ import {
   Collapse,
   Container,
   Divider,
+  Flex,
   Group,
   Space,
   Spoiler,
@@ -46,7 +47,9 @@ export default function FeedEntry({ entry, feed, expanded }: Props) {
           onClick={toggleExpanded}
           classNames={{ root: classes.header }}
         >
-          {isExpanded ? <IconChevronUp /> : <IconChevronDown />}
+          <Flex my="auto">
+            {isExpanded ? <IconChevronUp /> : <IconChevronDown />}
+          </Flex>
           <Stack gap={0}>
             {feed ? (
               <AnchorLink

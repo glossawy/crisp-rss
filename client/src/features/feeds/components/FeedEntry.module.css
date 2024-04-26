@@ -1,6 +1,10 @@
 .header {
   cursor: pointer;
   padding: var(--card-padding);
+
+  p {
+    font-weight: 500;
+  }
 }
 
 .headerFeedLink {
@@ -14,8 +18,4 @@
 .headerOutLink {
   display: flex !important;
   margin-left: auto !important;
-
-  p {
-    font-weight: 500;
-  }
 }

@@ -1,6 +1,7 @@
-import { Group, Stack, Text, Title } from '@mantine/core'
+import { Text, Title } from '@mantine/core'
 import { createLazyFileRoute } from '@tanstack/react-router'
 
+import { ContentHeader } from '@/components/ContentHeader'
 import MainContentMessage from '@/components/MainContentMessage'
 import useSession from '@/features/authentication/hooks/useSession'
 import FeedEntry from '@/features/feeds/components/FeedEntry'
@@ -27,14 +28,11 @@ export const Route = createLazyFileRoute('/_auth/home/')({
 
     return (
       <>
-        <Stack gap={0}>
-          <Group align="center" gap={0}>
-            <Title>Timeline</Title>
-          </Group>
+        <ContentHeader leftSection={<Title>Timeline</Title>}>
           <Text>
             A chronological timeline of entries from all of your feeds.
           </Text>
-        </Stack>
+        </ContentHeader>
         {timeline.map((entry) => (
           <FeedEntry
             feed={entry.feed}
