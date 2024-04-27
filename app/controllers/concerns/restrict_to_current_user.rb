@@ -5,7 +5,7 @@ module RestrictToCurrentUser
     private
 
     def current_user_only!
-      uid = respond_to?(:user_id) ? user_id : params.require(:user_id)
+      uid = respond_to?(:user_id, true) ? user_id : params.require(:user_id)
 
       return if current_user&.id == uid
 

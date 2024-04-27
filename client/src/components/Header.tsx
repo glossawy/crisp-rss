@@ -1,5 +1,6 @@
 import { AppShell, Group, Menu, Title, rem } from '@mantine/core'
-import { IconDoorExit, IconRss } from '@tabler/icons-react'
+import { IconDoorExit, IconRss, IconSettings } from '@tabler/icons-react'
+import { useNavigate } from '@tanstack/react-router'
 
 import AnchorLink from '@/components/AnchorLink'
 import useAuth from '@/features/authentication/hooks/useAuth'
@@ -11,6 +12,8 @@ import classes from './Header.module.css'
 export default function Header() {
   const { userId } = useSession()
   const { logout } = useAuth()
+
+  const navigate = useNavigate()
 
   return (
     <AppShell.Header>
@@ -34,6 +37,14 @@ export default function Header() {
               <UserButton userId={userId!} className={classes.userButton} />
             </Menu.Target>
             <Menu.Dropdown>
+              <Menu.Item
+                onClick={() => navigate({ to: '/home/settings' })}
+                leftSection={
+                  <IconSettings style={{ width: rem(14), height: rem(14) }} />
+                }
+              >
+                Settings
+              </Menu.Item>
               <Menu.Item
                 onClick={logout}
                 leftSection={

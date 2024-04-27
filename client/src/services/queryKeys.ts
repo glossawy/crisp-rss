@@ -9,8 +9,6 @@ export const queries = createQueryKeyStore({
     detail: (userId: string, feedId: number) => ({
       queryKey: [userId, feedId],
     }),
-  },
-  timeline: {
-    forUser: (userId: string) => ({ queryKey: [userId] }),
+    timeline: (userId: string) => ({ queryKey: [userId] }),
   },
 })

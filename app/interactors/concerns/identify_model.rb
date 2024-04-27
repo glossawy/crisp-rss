@@ -9,6 +9,7 @@ module IdentifyModel
         current_value = context.public_send(context_attr)
         record_id = context.public_send(:"#{context_attr}_id")
 
+        Rails.logger.info(current_value)
         if current_value.blank? && record_id.present?
           record = model_class.find_by(id: record_id)
 

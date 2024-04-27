@@ -3,13 +3,13 @@ import useUser from '@/features/users/hooks/useUser'
 import { UserConfigs } from '@/features/users/types'
 import { getComputedColorScheme } from '@/lib/utils'
 
-export default function useUserPreferences(): UserConfigs {
+export default function useUserPreferences() {
   const { userId } = useSession()
   const { user } = useUser(userId)
 
   const userConfig: UserConfigs =
     user != null
-      ? user.configs
+      ? user.configs!
       : {
           color_scheme: 'auto',
         }
@@ -18,5 +18,5 @@ export default function useUserPreferences(): UserConfigs {
     userConfig.color_scheme = getComputedColorScheme()
   }
 
-  return userConfig
+  return { userConfig, loaded: user != null }
 }

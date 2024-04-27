@@ -18,6 +18,7 @@ import SignInCard from '@/features/authentication/components/SignInCard'
 import useSession from '@/features/authentication/hooks/useSession'
 import { isAuthenticated } from '@/features/authentication/lib/auth'
 import { router } from '@/router'
+import { queryClient } from '@/services/queryClient'
 
 export const Route = createFileRoute('/')({
   validateSearch(search: Record<string, unknown>): { redirect?: string } {
@@ -30,6 +31,9 @@ export const Route = createFileRoute('/')({
       if (search.redirect) router.history.push(search.redirect)
       else throw redirect({ to: '/home' })
     }
+  },
+  onEnter() {
+    queryClient.clear()
   },
   component() {
     const { sessionId } = useSession()

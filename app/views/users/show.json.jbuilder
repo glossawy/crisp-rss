@@ -6,6 +6,6 @@ json.jsend_success do
     json.display_name user.display_name
     json.email user.email
 
-    json.configs user.config_hash
+    json.configs user.config_hash if CurrentSession.user.id == user.id
   end
 end

@@ -49,7 +49,7 @@ class FeedPresenter
   end
 
   def entries
-    feed.entries.map do |entry|
+    feed.entries.sort_by_recency.map do |entry|
       FeedEntryPresenter.new(entry)
     end
   end

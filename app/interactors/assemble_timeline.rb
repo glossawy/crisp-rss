@@ -14,6 +14,6 @@ class AssembleTimeline
       .includes(:feed)
       .joins(:feed)
       .where(feeds: { user_id: context.user.id })
-      .order(published_at: :desc, created_at: :desc)
+      .sort_by_recency
   end
 end

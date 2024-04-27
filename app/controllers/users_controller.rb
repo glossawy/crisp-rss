@@ -3,7 +3,7 @@
 class UsersController < AuthenticatedController
   include RestrictToCurrentUser
 
-  before_action :fetch_user!, only: %i[show]
+  before_action :fetch_user!
   before_action :current_user_only!, except: :show
 
   def show
@@ -34,8 +34,12 @@ class UsersController < AuthenticatedController
     UserPresenter.new(user)
   end
 
+  def user_id
+    params.require(:id)
+  end
+
   def fetch_user!
-    @user = User.find(params.require(:id))
+    @user = User.find(user_id)
 
     return if @user.present?
 

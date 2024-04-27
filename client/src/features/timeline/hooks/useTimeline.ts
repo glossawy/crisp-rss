@@ -10,7 +10,7 @@ export default function useTimeline(userId: string) {
     error,
     isLoading,
   } = timelineClient.fetchAll.useQuery(
-    queries.timeline.forUser(userId).queryKey,
+    queries.feeds.timeline(userId).queryKey,
     {
       headers: {
         authorization: authHeader,
@@ -20,7 +20,7 @@ export default function useTimeline(userId: string) {
       },
     },
     {
-      ...queries.timeline.forUser(userId),
+      ...queries.feeds.timeline(userId),
       select: (data) => data.body.data.timeline,
     },
   )

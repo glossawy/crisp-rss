@@ -4,6 +4,12 @@ class UpdateUserPreferences
 
   identify User, :user
 
+  before do
+    context.configs = context.configs.deep_transform_keys do |k|
+      k.to_s.underscore.to_sym
+    end
+  end
+
   def call
     context.original_config = user_config.to_h
     user_config.load!(context.configs)
@@ -40,11 +46,11 @@ class UpdateUserPreferences
 
   def set_configs!
     user_config.to_serialized_h.each do |(name, value)|
-      UserPreference.find_or_create_by(
+      up = UserPreference.find_or_create_by!(
         user_id: context.user.id,
-        user_preference_option_id: UserPreferenceOption.fetch_by_name(name),
-        value:,
+        option: UserPreferenceOption.fetch_by_name(name),
       )
+      up.update!(value:)
     end
   end
 

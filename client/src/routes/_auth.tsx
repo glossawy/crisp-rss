@@ -14,10 +14,10 @@ export const Route = createFileRoute('/_auth')({
   },
   component: () => {
     const { colorScheme, setColorScheme } = useMantineColorScheme()
-    const configs = useUserPreferences()
+    const { userConfig, loaded } = useUserPreferences()
 
-    if (configs.color_scheme !== colorScheme)
-      setColorScheme(configs.color_scheme)
+    if (loaded && userConfig.color_scheme !== colorScheme)
+      setColorScheme(userConfig.color_scheme)
 
     return (
       <>

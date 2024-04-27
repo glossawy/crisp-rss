@@ -138,11 +138,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_27_165401) do
   end
 
   create_table "user_preferences", force: :cascade do |t|
-    t.bigint "user_id"
+    t.uuid "user_id", null: false
     t.bigint "user_preference_option_id"
     t.string "value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["user_id", "user_preference_option_id"], name: "idx_on_user_id_user_preference_option_id_1df80ffafb", unique: true
     t.index ["user_id"], name: "index_user_preferences_on_user_id"
     t.index ["user_preference_option_id"], name: "index_user_preferences_on_user_preference_option_id"
   end
@@ -170,5 +171,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_27_165401) do
   end
 
   add_foreign_key "feeds", "users"
+  add_foreign_key "user_preferences", "users"
   add_foreign_key "user_sessions", "users"
 end

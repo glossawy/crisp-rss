@@ -21,5 +21,7 @@
 #  index_entries_on_feed_id_and_guid  (feed_id,guid) UNIQUE
 #
 class Entry < ApplicationRecord
+  scope :sort_by_recency, -> { order(published_at: :desc, created_at: :desc) }
+
   belongs_to :feed
 end

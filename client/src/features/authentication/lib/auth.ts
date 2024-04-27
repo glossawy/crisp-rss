@@ -71,7 +71,9 @@ export async function authenticate(
         'Received successful login response but missing Access-Token or Expire-At header',
       )
 
-    return { jwt, expires_at: expiry }
+    const session: SessionInfo = { jwt, expires_at: expiry }
+
+    return session
   } else {
     return null
   }
