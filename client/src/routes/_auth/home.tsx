@@ -26,7 +26,7 @@ export const Route = createFileRoute('/_auth/home')({
             <MainContentMessage message="Failed to find feed" />
           )}
         >
-          <Stack pt="md" px="md">
+          <Stack py="md" px="md">
             <Outlet />
           </Stack>
         </CatchNotFound>

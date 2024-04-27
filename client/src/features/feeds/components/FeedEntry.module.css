@@ -1,9 +1,10 @@
 .header {
   cursor: pointer;
-  padding: var(--card-padding);
+  padding: calc(var(--card-padding) / 2);
 
   p {
     font-weight: 500;
+    text-overflow: ellipsis;
   }
 }
 
@@ -17,5 +18,7 @@
 
 .headerOutLink {
   display: flex !important;
+  flex-direction: row;
+  align-items: center;
   margin-left: auto !important;
 }

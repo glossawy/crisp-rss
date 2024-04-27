@@ -4,7 +4,7 @@ import { createLazyFileRoute } from '@tanstack/react-router'
 import { ContentHeader } from '@/components/ContentHeader'
 import MainContentMessage from '@/components/MainContentMessage'
 import useSession from '@/features/authentication/hooks/useSession'
-import FeedEntry from '@/features/feeds/components/FeedEntry'
+import TimelineFeed from '@/features/timeline/components/TimelineFeed'
 import useTimeline from '@/features/timeline/hooks/useTimeline'
 import useAppTitle from '@/hooks/useAppTitle'
 
@@ -33,13 +33,7 @@ export const Route = createLazyFileRoute('/_auth/home/')({
             A chronological timeline of entries from all of your feeds.
           </Text>
         </ContentHeader>
-        {timeline.map((entry) => (
-          <FeedEntry
-            feed={entry.feed}
-            entry={entry}
-            key={`${entry.feed.id}-${entry.guid}`}
-          />
-        ))}
+        <TimelineFeed timeline={timeline} />
       </>
     )
   },
