@@ -3,10 +3,12 @@ export type FeedError = 'unsupported' | 'unreachable'
 export type FeedInfo = {
   id: number
   error: FeedError | null
+  url: string
   source_url: string
   site_url: string
   title: string
   description: string | null
+  interval: number
   entry_count: number
 
   ttl: number

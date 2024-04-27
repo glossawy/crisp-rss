@@ -1,4 +1,4 @@
-import { Button, Text } from '@mantine/core'
+import { Button, Group, Paper, Text } from '@mantine/core'
 import { modals } from '@mantine/modals'
 import { notifications } from '@mantine/notifications'
 import { IconArrowLeft, IconTrashX } from '@tabler/icons-react'
@@ -7,6 +7,7 @@ import { useContext } from 'react'
 
 import useSession from '@/features/authentication/hooks/useSession'
 import { feedsClient } from '@/features/feeds/api'
+import FeedEditForm from '@/features/feeds/components/FeedEditForm'
 import FeedHeader from '@/features/feeds/components/FeedHeader'
 import { FeedPageContext } from '@/features/feeds/contexts/FeedPageContext'
 import { queryClient } from '@/services/queryClient'
@@ -76,6 +77,11 @@ function FeedEditPage() {
           </>
         }
       />
+      <Group justify="center">
+        <Paper miw="var(--mantine-breakpoint-xs)" withBorder p="sm" radius="xs">
+          <FeedEditForm feed={feed!} userId={userId!} />
+        </Paper>
+      </Group>
     </>
   )
 }

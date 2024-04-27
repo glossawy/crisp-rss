@@ -15,7 +15,7 @@ class RefreshFeed
   private
 
   def due_for_refresh?
-    context.feed.due_for_refresh?
+    context.feed.due_for_refresh? || context.force
   end
 
   def update_feed!

@@ -16,7 +16,6 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as AuthImport } from './routes/_auth'
 import { Route as IndexImport } from './routes/index'
 import { Route as AuthHomeImport } from './routes/_auth/home'
-import { Route as AuthFeedsImport } from './routes/_auth/feeds'
 import { Route as AuthFeedsFeedIdIndexImport } from './routes/_auth/feeds/$feedId/index'
 import { Route as AuthFeedsFeedIdEditImport } from './routes/_auth/feeds/$feedId/edit'
 
@@ -42,11 +41,6 @@ const AuthHomeRoute = AuthHomeImport.update({
   getParentRoute: () => AuthRoute,
 } as any)
 
-const AuthFeedsRoute = AuthFeedsImport.update({
-  path: '/feeds',
-  getParentRoute: () => AuthRoute,
-} as any)
-
 const AuthHomeIndexLazyRoute = AuthHomeIndexLazyImport.update({
   path: '/',
   getParentRoute: () => AuthHomeRoute,
@@ -55,8 +49,8 @@ const AuthHomeIndexLazyRoute = AuthHomeIndexLazyImport.update({
 )
 
 const AuthFeedsFeedIdLazyRoute = AuthFeedsFeedIdLazyImport.update({
-  path: '/$feedId',
-  getParentRoute: () => AuthFeedsRoute,
+  path: '/feeds/$feedId',
+  getParentRoute: () => AuthRoute,
 } as any).lazy(() =>
   import('./routes/_auth/feeds/$feedId.lazy').then((d) => d.Route),
 )
@@ -83,17 +77,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthImport
       parentRoute: typeof rootRoute
     }
-    '/_auth/feeds': {
-      preLoaderRoute: typeof AuthFeedsImport
-      parentRoute: typeof AuthImport
-    }
     '/_auth/home': {
       preLoaderRoute: typeof AuthHomeImport
       parentRoute: typeof AuthImport
     }
     '/_auth/feeds/$feedId': {
       preLoaderRoute: typeof AuthFeedsFeedIdLazyImport
-      parentRoute: typeof AuthFeedsImport
+      parentRoute: typeof AuthImport
     }
     '/_auth/home/': {
       preLoaderRoute: typeof AuthHomeIndexLazyImport
@@ -115,13 +105,11 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
   AuthRoute.addChildren([
-    AuthFeedsRoute.addChildren([
-      AuthFeedsFeedIdLazyRoute.addChildren([
-        AuthFeedsFeedIdEditRoute,
-        AuthFeedsFeedIdIndexRoute,
-      ]),
-    ]),
     AuthHomeRoute.addChildren([AuthHomeIndexLazyRoute]),
+    AuthFeedsFeedIdLazyRoute.addChildren([
+      AuthFeedsFeedIdEditRoute,
+      AuthFeedsFeedIdIndexRoute,
+    ]),
   ]),
 ])
 

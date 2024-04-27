@@ -58,7 +58,7 @@ class FeedPresenter
     (next_fetch_at - Time.current).in_milliseconds.ceil
   end
 
-  delegate :id, :last_fetched_at, :next_fetch_at, to: :feed
+  delegate :id, :last_fetched_at, :next_fetch_at, :url, :interval, to: :feed
 
   private
 

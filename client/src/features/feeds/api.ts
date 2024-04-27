@@ -12,6 +12,11 @@ export const CreateFeedPayload = z.object({
   interval: z.number().int().min(30),
 })
 
+export const EditFeedPayload = z.object({
+  url: z.string().url().optional(),
+  interval: z.number().int().min(30).optional(),
+})
+
 const contract = c.router(
   {
     getAllFeeds: {
@@ -52,6 +57,22 @@ const contract = c.router(
         422: c.type<JSendFail<keyof z.infer<typeof CreateFeedPayload>>>(),
       },
     },
+    updateFeed: {
+      method: 'PUT',
+      path: '/users/:userId/feeds/:id',
+      pathParams: z.object({
+        userId: z.string(),
+        id: z.coerce.number(),
+      }),
+      body: z.object({
+        feed: EditFeedPayload,
+      }),
+      responses: {
+        200: c.type<JSendSuccess<{ feed: FeedInfo }>>(),
+        422: c.type<JSendFail<keyof z.infer<typeof EditFeedPayload>>>(),
+        400: c.type<JSendError>(),
+      },
+    },
     unsubscribeFeed: {
       method: 'DELETE',
       path: '/users/:userId/feeds/:id',
@@ -63,7 +84,6 @@ const contract = c.router(
       responses: {
         200: c.type<JSendSuccess<{ feed: FeedInfo }>>(),
         404: c.type<JSendFail<keyof z.infer<typeof CreateFeedPayload>>>(),
-        500: c.type<JSendError>(),
       },
     },
   },
@@ -73,6 +93,7 @@ const contract = c.router(
     }),
     commonResponses: {
       401: c.type<JSendError>(),
+      500: c.type<JSendError>(),
     },
     strictStatusCodes: true,
   },

@@ -36,7 +36,7 @@ module Users
       end
     end
 
-    def create # rubocop:disable Metrics/AbcSize
+    def create
       result = AddUserFeed.call(
         user_id: params.require(:user_id), params: create_params,
       )
@@ -44,11 +44,24 @@ module Users
       if result.success?
         render status: :created, locals: { feed: to_presenter(result.feed) }
       elsif result.errors
-        render status: :unprocessable_entity, json: jsend_fail(
-          url: result.errors[:url], interval: result.errors[:interval],
-        )
+        render status: :unprocessable_entity, json: jsend_fail(invalid_params(create_params, result.errors))
       else
-        Rails.logger.error(result.error)
+        render status: :internal_server_error, json: jsend_error(result.reason)
+      end
+    end
+
+    def update
+      result = UpdateFeed.call(
+        user_id: params.require(:user_id),
+        feed_id: params.require(:id),
+        updates: update_params,
+      )
+
+      if result.success?
+        render locals: { feed: to_presenter(result.feed) }
+      elsif result.errors
+        render status: :unprocessable_entity, json: jsend_fail(invalid_params(update_params, result.errors))
+      else
         render status: :bad_request, json: jsend_error(result.reason)
       end
     end
@@ -77,6 +90,13 @@ module Users
     end
 
     def create_params
+      params.require(:feed).permit(
+        :url,
+        :interval,
+      )
+    end
+
+    def update_params
       params.require(:feed).permit(
         :url,
         :interval,

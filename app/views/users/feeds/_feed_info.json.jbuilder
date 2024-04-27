@@ -2,10 +2,12 @@
 
 json.id feed.id
 json.error feed.error
+json.url feed.url
 json.source_url feed.source_url
 json.site_url feed.site_url
 json.title feed.title
 json.description feed.description
+json.interval feed.interval
 json.entry_count feed.entry_count
 
 json.ttl feed.ttl
