@@ -6,6 +6,7 @@ import { useCallback } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
+import { DurationInput } from '@/components/inputs/DurationInput'
 import { getAuthHeader } from '@/features/authentication/lib/auth'
 import { CreateFeedPayload, feedsClient } from '@/features/feeds/api'
 import { FeedInfo } from '@/features/feeds/types'
@@ -106,10 +107,9 @@ export default function CreateFeedContextModal({
         control={form.control}
         name="interval"
         render={({ field, fieldState: { error } }) => (
-          <TextInput
+          <DurationInput
             label="Refresh Interval"
             error={error?.message}
-            placeholder="dd:hh:mm"
             {...field}
             withAsterisk
           />

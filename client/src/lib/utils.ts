@@ -4,6 +4,8 @@ export type WithoutChildren<P extends { children?: React.ReactNode }> = Omit<
 >
 
 export function parseDurationToMinutes(durationText: string): number {
+  if (durationText.trim() === '') return 0
+
   const parts = durationText
     .trim()
     .split(':')
