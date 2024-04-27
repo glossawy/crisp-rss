@@ -11,7 +11,7 @@ import {
   createFileRoute,
   redirect,
   useRouter,
-  useRouterState,
+  useSearch,
 } from '@tanstack/react-router'
 
 import SignInCard from '@/features/authentication/components/SignInCard'
@@ -38,9 +38,7 @@ export const Route = createFileRoute('/')({
   component() {
     const { sessionId } = useSession()
     const router = useRouter()
-    const {
-      location: { search },
-    } = useRouterState()
+    const search = useSearch({ from: '/' })
 
     const { colorScheme, toggleColorScheme } = useMantineColorScheme()
     const computedScheme = useComputedColorScheme()
