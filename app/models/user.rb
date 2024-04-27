@@ -37,6 +37,7 @@ class User < ApplicationRecord
 
   has_many :feeds, dependent: nil
   has_many :sessions, class_name: 'UserSession', dependent: :destroy
+  has_many :configs, class_name: 'UserPreference', dependent: :destroy
 
   def self.fetch_by_token(session_token)
     session = UserSession.active.find_by(session_token:)

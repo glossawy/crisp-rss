@@ -34,7 +34,7 @@ export default function SessionHeartbeat() {
     return () => {
       clearInterval(interval)
     }
-  }, [])
+  }, [clearSession])
 
   return null
 }

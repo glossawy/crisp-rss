@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   get '/sessions/logout', to: 'sessions#logout'
 
   resources :sessions, only: %i[create]
-  resources :users, only: %i[show] do
+  resources :users, only: %i[show update] do
     resources :feeds, module: :users, only: %i[show index create destroy update] do
       get 'timeline', to: 'feeds#timeline', on: :collection
     end

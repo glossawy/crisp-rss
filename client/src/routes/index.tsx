@@ -1,4 +1,11 @@
-import { Group } from '@mantine/core'
+import {
+  Affix,
+  Button,
+  Group,
+  useComputedColorScheme,
+  useMantineColorScheme,
+} from '@mantine/core'
+import { IconMoon, IconSun } from '@tabler/icons-react'
 import {
   Navigate,
   createFileRoute,
@@ -31,6 +38,11 @@ export const Route = createFileRoute('/')({
       location: { search },
     } = useRouterState()
 
+    const { colorScheme, toggleColorScheme } = useMantineColorScheme()
+    const computedScheme = useComputedColorScheme()
+
+    const currentScheme = colorScheme === 'auto' ? computedScheme : colorScheme
+
     if (sessionId && search.redirect) {
       router.history.push(search.redirect)
     } else if (sessionId) {
@@ -38,9 +50,24 @@ export const Route = createFileRoute('/')({
     }
 
     return (
-      <Group style={{ height: '100%', justifyContent: 'center' }}>
-        <SignInCard />
-      </Group>
+      <>
+        <Affix position={{ top: 32, right: 32 }}>
+          <Button
+            c="gray"
+            variant="subtle"
+            size="xl"
+            onClick={() => toggleColorScheme()}
+            rightSection={currentScheme === 'dark' ? <IconSun /> : <IconMoon />}
+          >
+            {currentScheme === 'light'
+              ? 'Change to Dark Mode'
+              : 'Change to Light Mode'}
+          </Button>
+        </Affix>
+        <Group style={{ height: '100%', justifyContent: 'center' }}>
+          <SignInCard />
+        </Group>
+      </>
     )
   },
 })
