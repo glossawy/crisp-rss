@@ -2,7 +2,7 @@ import { ActionIcon, TextInput, TextInputProps } from '@mantine/core'
 import { useToggle } from '@mantine/hooks'
 import { IconEye, IconEyeClosed } from '@tabler/icons-react'
 
-type Props = { revealable: boolean } & TextInputProps
+type Props = { revealable?: boolean } & TextInputProps
 
 export default function SecretInput({ revealable, ...inputProps }: Props) {
   const [showText, toggleShowText] = useToggle([false, true])

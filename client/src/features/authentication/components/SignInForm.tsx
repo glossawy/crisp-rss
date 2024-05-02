@@ -1,5 +1,4 @@
-import { Space, TextInput } from '@mantine/core'
-import { Controller } from 'react-hook-form'
+import { Stack, TextInput } from '@mantine/core'
 import { z } from 'zod'
 
 import CrispForm from '@/components/CrispForm'
@@ -19,45 +18,35 @@ export default function SignInForm() {
     <CrispForm<SignInData>
       schema={SignInSchema}
       defaults={{ email: '', password: '' }}
-      onSubmitFactory={({ setAlert }) =>
-        async (values) => {
-          const signedIn = await login(values)
+      onSubmit={async ({ setAlert, values }) => {
+        const signedIn = await login(values)
 
-          setAlert(
-            signedIn
-              ? null
-              : { danger: true, message: 'Email or password is incorrect' },
-          )
-        }}
+        setAlert(
+          signedIn
+            ? null
+            : { danger: true, message: 'Email or password is incorrect' },
+        )
+      }}
       buttonsVariant="subtle"
       buttonsRight
     >
-      <Controller
-        name="email"
-        render={({ field, fieldState }) => (
-          <TextInput
+      {(Controlled) => (
+        <Stack gap="lg">
+          <Controlled
+            component={TextInput}
+            name="email"
             label="Email"
             placeholder="user@example.com"
-            type="email"
-            error={fieldState.error?.message}
-            {...field}
           />
-        )}
-      />
 
-      <Space h="lg" />
-
-      <Controller
-        name="password"
-        render={({ field, fieldState: { error } }) => (
-          <SecretInput
+          <Controlled
+            component={SecretInput}
+            name="password"
             label="Password"
-            error={error?.message}
-            {...field}
             revealable
           />
-        )}
-      />
+        </Stack>
+      )}
     </CrispForm>
   )
 }

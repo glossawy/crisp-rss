@@ -1,31 +1,111 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Alert, Button, ButtonVariant, Group, Space } from '@mantine/core'
-import { IconCheck, IconExclamationCircle } from '@tabler/icons-react'
-import React, { useMemo, useState } from 'react'
 import {
+  Alert,
+  Button,
+  ButtonVariant,
+  Group,
+  Space,
+  TextInput,
+} from '@mantine/core'
+import { IconCheck, IconExclamationCircle } from '@tabler/icons-react'
+import { useState } from 'react'
+import {
+  Controller,
   DefaultValues,
   FieldValues,
   FormProvider,
+  Path,
   UseFormReturn,
   useForm,
 } from 'react-hook-form'
 import { z } from 'zod'
 
+import { DurationInput } from '@/components/inputs/DurationInput'
+import SecretInput from '@/components/inputs/SecretInput'
+
 type ButtonsProps = { variant: ButtonVariant; disabled?: boolean }
 
-type Props<TFieldValues extends FieldValues> = React.PropsWithChildren<{
+type Props<TFieldValues extends FieldValues> = {
   schema: z.ZodSchema<TFieldValues>
   defaults?: DefaultValues<TFieldValues>
   buttons?: (props: ButtonsProps) => React.ReactNode
   buttonsRight?: boolean
   buttonsVariant?: ButtonVariant
-  onSubmitFactory: (props: {
-    setAlert: (alertContent: AlertContent | null) => void
+  onSubmit: (params: {
     form: UseFormReturn<TFieldValues>
-  }) => (values: TFieldValues) => void | Promise<void>
-}>
+    setAlert: (content: AlertContent | null) => void
+    values: TFieldValues
+  }) => void | Promise<void>
+  children:
+    | React.ReactNode
+    | ((
+        Controlled: PartiallyAppliedControlled<TFieldValues>,
+      ) => React.ReactNode)
+}
 
 type AlertContent = { danger: boolean; message: string; icon?: React.ReactNode }
+
+type AllowedInputs =
+  | typeof TextInput
+  | typeof SecretInput
+  | typeof DurationInput
+type Controlled = <
+  TFieldValues extends FieldValues,
+  TInput extends AllowedInputs,
+  TProps extends {
+    label?: React.ReactNode
+    name?: string
+  } = React.ComponentPropsWithRef<TInput>,
+>(
+  props: TProps & {
+    component: TInput
+    label: React.ReactNode
+    name: Path<TFieldValues>
+  },
+) => React.ReactNode
+
+type PartiallyAppliedControlled<TFieldValues extends FieldValues> = <
+  TInput extends AllowedInputs,
+  TProps extends {
+    label?: React.ReactNode
+    name?: string
+  } = React.ComponentPropsWithRef<TInput>,
+>(
+  props: TProps & {
+    component: TInput
+    label: React.ReactNode
+    name: Path<TFieldValues>
+  },
+) => React.ReactNode
+
+const ControlledField: Controlled = <
+  TFieldValues extends FieldValues,
+  TInput extends AllowedInputs,
+  TProps extends {
+    label?: React.ReactNode
+    name?: string
+  } = React.ComponentPropsWithRef<TInput>,
+>({
+  label,
+  name,
+  component,
+  ...inputProps
+}: TProps & {
+  component: TInput
+  label: React.ReactNode
+  name: Path<TFieldValues>
+}) => {
+  return (
+    <Controller
+      name={name}
+      render={({ field, fieldState: { error } }) => (
+        <>
+          {component({ label, error: error?.message, ...inputProps, ...field })}
+        </>
+      )}
+    />
+  )
+}
 
 export default function CrispForm<TFieldValues extends FieldValues>({
   schema,
@@ -33,7 +113,7 @@ export default function CrispForm<TFieldValues extends FieldValues>({
   buttons,
   buttonsRight,
   buttonsVariant,
-  onSubmitFactory,
+  onSubmit,
   children,
 }: Props<TFieldValues>) {
   const form = useForm<TFieldValues>({
@@ -69,13 +149,8 @@ export default function CrispForm<TFieldValues extends FieldValues>({
   const submitDisabled =
     !form.formState.isValid || form.formState.isSubmitting || alert != null
 
-  const clientSubmit = useMemo(
-    () => onSubmitFactory({ setAlert: setAlertContent, form }),
-    [onSubmitFactory, setAlertContent],
-  )
-
-  const onSubmit = form.handleSubmit((values) => {
-    const rvalue = clientSubmit(values)
+  const handleSubmit = form.handleSubmit((values) => {
+    const rvalue = onSubmit({ form, setAlert: setAlertContent, values })
 
     if (rvalue instanceof Promise) {
       return rvalue.finally(() => form.reset(values))
@@ -87,12 +162,12 @@ export default function CrispForm<TFieldValues extends FieldValues>({
   return (
     <FormProvider {...form}>
       <form
-        onSubmit={onSubmit}
+        onSubmit={handleSubmit}
         onChange={() => {
           setAlertContent(null)
         }}
       >
-        {children}
+        {typeof children === 'function' ? children(ControlledField) : children}
         <Space h="md" />
         <Group align="center" justify={buttonsRight ? 'end' : 'start'}>
           {buttonsRight ? alert : null}

@@ -1,7 +1,6 @@
 import { Stack, TextInput } from '@mantine/core'
 import { ContextModalProps } from '@mantine/modals'
 import { useMutation } from '@tanstack/react-query'
-import { Controller } from 'react-hook-form'
 import { z } from 'zod'
 
 import CrispForm from '@/components/CrispForm'
@@ -58,53 +57,44 @@ export default function CreateFeedContextModal({
     <CrispForm<FormValues>
       schema={FormValuesSchema}
       defaults={{ url: '', interval: '' }}
-      onSubmitFactory={({ form }) =>
-        async (values: FormValues) => {
-          const { body, status } = await mutateAsync({
-            url: values.url,
-            interval: parseDurationToMinutes(values.interval),
-          })
+      onSubmit={async ({ form, values }) => {
+        const { body, status } = await mutateAsync({
+          url: values.url,
+          interval: parseDurationToMinutes(values.interval),
+        })
 
-          if (status === 201) {
-            onNewFeed(body.data.feed)
-            queryClient.invalidateQueries({
-              ...queries.feeds.all(userId),
-            })
-            context.closeContextModal(id)
-          } else if (status === 401) {
-            form.setError('root', { message: 'You are not logged in' })
-          } else if (body.status === 'fail') {
-            Object.keys(values).forEach((fieldName) => {
-              const field = fieldName as keyof FormValues
-              form.setError(field, { message: body.data[field] })
-            })
-          }
-        }}
+        if (status === 201) {
+          onNewFeed(body.data.feed)
+          queryClient.invalidateQueries({
+            ...queries.feeds.all(userId),
+          })
+          context.closeContextModal(id)
+        } else if (status === 401) {
+          form.setError('root', { message: 'You are not logged in' })
+        } else if (body.status === 'fail') {
+          Object.keys(values).forEach((fieldName) => {
+            const field = fieldName as keyof FormValues
+            form.setError(field, { message: body.data[field] })
+          })
+        }
+      }}
     >
-      <Stack gap="md">
-        <Controller
-          name="url"
-          render={({ field, fieldState: { error } }) => (
-            <TextInput
-              label="Feed URL"
-              error={error?.message}
-              {...field}
-              withAsterisk
-            />
-          )}
-        />
-        <Controller
-          name="interval"
-          render={({ field, fieldState: { error } }) => (
-            <DurationInput
-              label="Refresh Interval"
-              error={error?.message}
-              {...field}
-              withAsterisk
-            />
-          )}
-        />
-      </Stack>
+      {(Controlled) => (
+        <Stack gap="md">
+          <Controlled
+            component={TextInput}
+            name="url"
+            label="Feed URL"
+            withAsterisk
+          />
+          <Controlled
+            component={DurationInput}
+            name="interval"
+            label="Refresh Interval"
+            withAsterisk
+          />
+        </Stack>
+      )}
     </CrispForm>
   )
 }
