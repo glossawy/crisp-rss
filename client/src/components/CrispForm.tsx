@@ -1,12 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  Alert,
-  Button,
-  ButtonVariant,
-  Group,
-  Space,
-  TextInput,
-} from '@mantine/core'
+import { Alert, Button, ButtonVariant, Group, Space } from '@mantine/core'
 import { IconCheck, IconExclamationCircle } from '@tabler/icons-react'
 import { useState } from 'react'
 import {
@@ -19,9 +12,6 @@ import {
   useForm,
 } from 'react-hook-form'
 import { z } from 'zod'
-
-import { DurationInput } from '@/components/inputs/DurationInput'
-import SecretInput from '@/components/inputs/SecretInput'
 
 type ButtonsProps = { variant: ButtonVariant; disabled?: boolean }
 
@@ -45,63 +35,54 @@ type Props<TFieldValues extends FieldValues> = {
 
 type AlertContent = { danger: boolean; message: string; icon?: React.ReactNode }
 
-type AllowedInputs =
-  | typeof TextInput
-  | typeof SecretInput
-  | typeof DurationInput
+type RequiredInputProps = {
+  label?: React.ReactNode
+  error?: React.ReactNode
+}
+
+type ControlledProps<
+  TFieldValues extends FieldValues,
+  TInputProps extends RequiredInputProps,
+> = TInputProps & {
+  component: React.ComponentType<TInputProps>
+  label: React.ReactNode
+  name: Path<TFieldValues>
+}
+
 type Controlled = <
   TFieldValues extends FieldValues,
-  TInput extends AllowedInputs,
-  TProps extends {
-    label?: React.ReactNode
-    name?: string
-  } = React.ComponentPropsWithRef<TInput>,
+  TProps extends RequiredInputProps,
 >(
-  props: TProps & {
-    component: TInput
-    label: React.ReactNode
-    name: Path<TFieldValues>
-  },
+  props: ControlledProps<TFieldValues, TProps>,
 ) => React.ReactNode
 
 type PartiallyAppliedControlled<TFieldValues extends FieldValues> = <
-  TInput extends AllowedInputs,
-  TProps extends {
-    label?: React.ReactNode
-    name?: string
-  } = React.ComponentPropsWithRef<TInput>,
+  TProps extends RequiredInputProps,
 >(
-  props: TProps & {
-    component: TInput
-    label: React.ReactNode
-    name: Path<TFieldValues>
-  },
+  props: ControlledProps<TFieldValues, TProps>,
 ) => React.ReactNode
 
 const ControlledField: Controlled = <
   TFieldValues extends FieldValues,
-  TInput extends AllowedInputs,
-  TProps extends {
-    label?: React.ReactNode
-    name?: string
-  } = React.ComponentPropsWithRef<TInput>,
+  TProps extends RequiredInputProps,
 >({
   label,
   name,
   component,
   ...inputProps
-}: TProps & {
-  component: TInput
-  label: React.ReactNode
-  name: Path<TFieldValues>
-}) => {
+}: ControlledProps<TFieldValues, TProps>) => {
+  const Component = component
   return (
     <Controller
       name={name}
       render={({ field, fieldState: { error } }) => (
-        <>
-          {component({ label, error: error?.message, ...inputProps, ...field })}
-        </>
+        <Component
+          label={label}
+          error={error?.message}
+          // TODO: Resolve this typecast
+          {...(inputProps as unknown as TProps)}
+          {...field}
+        />
       )}
     />
   )

@@ -2,7 +2,7 @@ import { Stack, TextInput } from '@mantine/core'
 import { z } from 'zod'
 
 import CrispForm from '@/components/CrispForm'
-import SecretInput from '@/components/inputs/SecretInput'
+import { SecretInput } from '@/components/inputs/SecretInput'
 import useAuth from '@/features/authentication/hooks/useAuth'
 
 const SignInSchema = z.object({
