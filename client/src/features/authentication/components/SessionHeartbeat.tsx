@@ -1,7 +1,7 @@
 import { differenceInMilliseconds, parseISO } from 'date-fns'
 import { useEffect } from 'react'
 
-import { sessionsClient } from '@/features/authentication/api'
+import { authClient } from '@/features/authentication/api'
 import useSession from '@/features/authentication/hooks/useSession'
 import { getAuthHeader } from '@/features/authentication/lib/auth'
 
@@ -12,7 +12,7 @@ export default function SessionHeartbeat() {
 
   useEffect(() => {
     const checkSession = async () => {
-      const response = await sessionsClient.checkSession.query({
+      const response = await authClient.checkSession.query({
         headers: {
           authorization: getAuthHeader(),
         },

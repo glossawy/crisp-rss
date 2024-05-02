@@ -1,14 +1,11 @@
+# frozen_string_literal: true
+
 class UpdateFeed
   include Interactor
   include IdentifyModel
 
   identify User, :user
-
-  before do
-    next if context.feed.present?
-
-    context.feed = context.user.feeds.find_by(id: context.feed_id)
-  end
+  identify Feed, :feed, using: -> { context.user.feeds }
 
   def call
     context.fail!(reason: :not_found) if context.feed.blank?

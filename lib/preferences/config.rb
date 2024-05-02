@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Preferences
   class Config
     class NotAllowed < StandardError
@@ -38,7 +40,7 @@ module Preferences
       end
     end
 
-    def keys = config_data.keys
+    delegate :keys, to: :config_data
 
     def to_serialized_h
       serialized_config.deep_symbolize_keys

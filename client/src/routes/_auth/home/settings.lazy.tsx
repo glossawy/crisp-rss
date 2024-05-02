@@ -10,7 +10,7 @@ import useUserPreferences from '@/features/users/hooks/useUserPreferences'
 export const Route = createLazyFileRoute('/_auth/home/settings')({
   component: () => {
     const router = useRouter()
-    const { userConfig, loaded } = useUserPreferences()
+    const { config, loaded } = useUserPreferences()
 
     if (!loaded) return <MainContentMessage message="Loading..." />
 
@@ -35,7 +35,7 @@ export const Route = createLazyFileRoute('/_auth/home/settings')({
             p="sm"
             radius="xs"
           >
-            <UserConfigForm currentScheme={userConfig.color_scheme} />
+            <UserConfigForm currentScheme={config.color_scheme} />
           </Paper>
         </Group>
       </>

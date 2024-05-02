@@ -32,6 +32,7 @@ gem 'jwt', '~> 2.8'
 gem 'pg', '~> 1.5'
 gem 'redis', '~> 5.2'
 gem 'request_store', '~> 1.6'
+gem 'strong_password', '~> 0.0.10'
 gem 'validates_email_format_of', '~> 1.8'
 gem 'validate_url', '~> 1.0'
 

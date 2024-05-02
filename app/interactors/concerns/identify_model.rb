@@ -3,33 +3,37 @@
 module IdentifyModel
   extend ActiveSupport::Concern
 
+  IdentificationError = Class.new(StandardError)
+
   class_methods do
-    def identify(model_class, context_attr)
+    def identify(model_class, context_attr, using: proc { model_class })
       before do
         current_value = context.public_send(context_attr)
         record_id = context.public_send(:"#{context_attr}_id")
 
-        Rails.logger.info(current_value)
-        if current_value.blank? && record_id.present?
-          record = model_class.find_by(id: record_id)
+        next unless current_value.nil?
+        raise IdentifyModel::IdentificationError, "Cannot identify #{model_class} without id" if record_id.nil?
 
-          context.public_send(:"#{context_attr}=", record)
-        end
+        record = instance_exec(&using).find_by(id: record_id)
+        context.public_send(:"#{context_attr}=", record)
       end
     end
 
-    def identify_many(model_class, context_attr)
+    def identify_many(model_class, context_attr, using: proc { model_class })
       singular_attr = context_attr.to_s.singularize
 
       before do
         current_values = context.public_send(context_attr)
         record_ids = context.public_send(:"#{singular_attr}_ids")
 
-        if current_values.blank? && record_ids.present?
-          records = model_class.where(id: record_ids).to_a
+        next unless current_values.nil?
 
-          context.public_send(:"#{context_attr}=", records)
+        if record_ids.nil?
+          raise IdentifyModel::IdentificationError, "Cannot identify #{model_class.to_s.pluralize} without ids"
         end
+
+        records = instance_exec(&using).where(id: record_ids).to_a
+        context.public_send(:"#{context_attr}=", records)
       end
     end
   end

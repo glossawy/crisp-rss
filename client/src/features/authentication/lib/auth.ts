@@ -1,10 +1,7 @@
 import { isPast, parseISO } from 'date-fns'
 import { z } from 'zod'
 
-import {
-  CreateSessionRequest,
-  sessionsClient,
-} from '@/features/authentication/api'
+import { CreateSessionRequest, authClient } from '@/features/authentication/api'
 import { fetchStoredData } from '@/lib/storage'
 import { StorageKeys } from '@/lib/storageKeys'
 import { bearerToken } from '@/services/utils'
@@ -42,7 +39,7 @@ export async function logout(): Promise<boolean> {
 
   if (!session) throw new Error('Attempted to log out with a session')
 
-  const response = await sessionsClient.expireSession.query({
+  const response = await authClient.expireSession.query({
     headers: {
       authorization: bearerToken(session.jwt),
     },
@@ -58,7 +55,7 @@ export async function logout(): Promise<boolean> {
 export async function authenticate(
   params: AuthenticateParams,
 ): Promise<SessionInfo | null> {
-  const response = await sessionsClient.createSession.mutation({
+  const response = await authClient.createSession.mutation({
     body: { user: params },
   })
 

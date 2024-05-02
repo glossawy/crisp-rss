@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TimelineEntryPresenter
   def initialize(entry)
     @entry = entry

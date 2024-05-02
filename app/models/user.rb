@@ -24,6 +24,8 @@ class User < ApplicationRecord
   acts_as_paranoid
   secured_with_argon2!
 
+  MIN_PASSWORD_ENTROPY = 25
+
   validates :email, presence: true, email_format: true
   validates :display_name, presence: true, length: {
     minimum: 2,
@@ -33,7 +35,7 @@ class User < ApplicationRecord
     with: /\A\S+\z/i,
     message: 'cannot contain any whitespace',
   }
-  validates :password, length: { minimum: 8 }
+  validates :password, password_strength: { use_dictionary: true, min_entropy: MIN_PASSWORD_ENTROPY }
 
   has_many :feeds, dependent: nil
   has_many :sessions, class_name: 'UserSession', dependent: :destroy

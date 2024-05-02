@@ -3,11 +3,25 @@
 class UsersController < AuthenticatedController
   include RestrictToCurrentUser
 
-  before_action :fetch_user!
-  before_action :current_user_only!, except: :show
+  skip_authentication! only: :create
+
+  before_action :fetch_user!, except: :create
+  before_action :current_user_only!, only: :update
 
   def show
     render locals: { user: to_presenter(@user) }
+  end
+
+  def create
+    result = RegisterUser.call(params: create_params)
+
+    if result.success?
+      render :show, status: :created, locals: { user: to_presenter(result.user) }
+    elsif result.errors
+      render status: :unprocessable_entity, json: jsend_fail(result.errors)
+    else
+      render status: :internal_server_error, json: jsend_error(result.reason)
+    end
   end
 
   def update
@@ -16,7 +30,7 @@ class UsersController < AuthenticatedController
     if result.success?
       render :show, locals: { user: to_presenter(@user) }
     elsif result.errors
-      render status: :unprocessable_entity, json: jsend_fail(result.errors)
+      render status: :unprocessable_entity, json: jsend_fail(config_errors(result.errors))
     else
       render status: :internal_server_error, json: jsend_error(result.reason)
     end
@@ -24,10 +38,20 @@ class UsersController < AuthenticatedController
 
   private
 
+  def create_params
+    params.require(:user).permit(
+      :displayName, :email, :password, :passwordConfirmation,
+    ).transform_keys(&:underscore)
+  end
+
   def update_params
     params.require(:user).permit(
       configs: {},
     )
+  end
+
+  def config_errors(errors)
+    errors.transform_keys { |k| k.to_s.camelize(:lower) }
   end
 
   def to_presenter(user)

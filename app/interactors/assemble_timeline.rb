@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AssembleTimeline
   include Interactor
   include IdentifyModel

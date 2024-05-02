@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 json.jsend_success do
   json.timeline(entries) do |entry|

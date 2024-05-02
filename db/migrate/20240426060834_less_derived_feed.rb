@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class LessDerivedFeed < ActiveRecord::Migration[7.1]
   def change
     change_table :feeds, bulk: true do |t|

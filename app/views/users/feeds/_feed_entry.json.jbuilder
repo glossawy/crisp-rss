@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.guid entry.guid
 json.authors entry.authors
 json.url entry.url

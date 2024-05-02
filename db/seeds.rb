@@ -12,5 +12,5 @@
 
 UserPreference.find_or_create_by!(
   name: UserPreferenceOption::COLOR_SCHEME,
-  type: :string
+  type: :string,
 )

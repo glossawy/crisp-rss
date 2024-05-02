@@ -3,7 +3,17 @@ import useUser from '@/features/users/hooks/useUser'
 import { UserConfigs } from '@/features/users/types'
 import { getComputedColorScheme } from '@/lib/utils'
 
-export default function useUserPreferences() {
+type ComputedConfig = { colorScheme: 'dark' | 'light' }
+type ComputedUserConfig = UserConfigs & {
+  computed: {
+    colorScheme: 'dark' | 'light'
+  }
+}
+
+export default function useUserPreferences(): {
+  config: ComputedUserConfig
+  loaded: boolean
+} {
   const { userId } = useSession()
   const { user } = useUser(userId)
 
@@ -14,9 +24,15 @@ export default function useUserPreferences() {
           color_scheme: 'auto',
         }
 
-  if (userConfig.color_scheme === 'auto') {
-    userConfig.color_scheme = getComputedColorScheme()
+  const computedConfig: ComputedConfig = {
+    colorScheme:
+      userConfig.color_scheme === 'auto'
+        ? getComputedColorScheme()
+        : userConfig.color_scheme,
   }
 
-  return { userConfig, loaded: user != null }
+  return {
+    config: { ...userConfig, computed: computedConfig },
+    loaded: user != null,
+  }
 }
